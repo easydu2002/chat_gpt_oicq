@@ -5,28 +5,23 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 dotenv.config();
 
 (async () => {
+  const qq = Number(process.env.qq as string)
   const api = new ChatGPTAPI({ sessionToken: process.env.token as string })
   await api.ensureAuth()
-  const client = createClient(Number(process.env.qq as string))
+  const client = createClient(qq)
 
   client.on("message", async e => {
 
-    // 私聊消息处理
-    if(e.message_type === 'private' || !e.raw_message.trim()) {
-      const response = await api.sendMessage(e.raw_message, {
+    // 私信或at回复
+    if(e.message_type === 'private' || e.atme) {
+      const raw_message = e.message.filter(item => item.type === 'text').map(item => item.text).join().trim()
+      if(!raw_message) return
+      const response = await api.sendMessage(raw_message, {
         timeoutMs: 2 * 60 * 1000
       })
       e.reply(response, true) //true表示引用对方的消息
     }
-    
-    // 非私信消息处理
-    if(!e.message.find(item => item.type === 'at')) return
-    const raw_message = e.message.filter(item => item.type === 'text').map(item => item.text).join().trim()
-    if(!raw_message) return
-    const response = await api.sendMessage(raw_message, {
-      timeoutMs: 2 * 60 * 1000
-    })
-    e.reply(response, true) //true表示引用对方的消息
+
   })
 
   client.on("system.login.qrcode", function (e) {

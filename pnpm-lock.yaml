@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@types/node': ^18.11.11
@@ -127,6 +127,11 @@ packages:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/debug/-/debug-2.6.9.tgz}
     name: debug
     version: 2.6.9
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: registry.npmmirror.com/ms/2.0.0
     dev: false
@@ -135,6 +140,11 @@ packages:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/debug/-/debug-3.2.7.tgz}
     name: debug
     version: 3.2.7
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: registry.npmmirror.com/ms/2.1.2
     dev: false
@@ -641,6 +651,8 @@ packages:
       debug: registry.npmmirror.com/debug/3.2.7
       iconv-lite: registry.npmmirror.com/iconv-lite/0.4.24
       sax: registry.npmmirror.com/sax/1.2.4
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.npmmirror.com/oicq/2.3.1:
@@ -688,6 +700,8 @@ packages:
       lodash.merge: registry.npmmirror.com/lodash.merge/4.6.2
       needle: registry.npmmirror.com/needle/2.9.1
       stream-parser: registry.npmmirror.com/stream-parser/0.3.1
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.npmmirror.com/remark-parse/10.0.1:
@@ -758,6 +772,8 @@ packages:
     version: 0.3.1
     dependencies:
       debug: registry.npmmirror.com/debug/2.6.9
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   registry.npmmirror.com/streamroller/3.1.3:

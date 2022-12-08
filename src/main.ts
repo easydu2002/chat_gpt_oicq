@@ -1,15 +1,14 @@
 import { ChatGPTAPI } from 'chatgpt'
 import { createClient } from "oicq"
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import { config } from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 
-dotenv.config();
+config();
 
 async function main() {
   const qq = Number(process.env.qq as string)
   const api = new ChatGPTAPI({ sessionToken: process.env.token as string })
   await api.ensureAuth()
   const client = createClient(qq)
-
   const trackSession = api.getConversation()
 
   client.on("message", async e => {
@@ -18,15 +17,18 @@ async function main() {
     // if(Date.now() - Number(lastId) > 1000 * 60 * 10) {
     //   lastId = undefined
     // }
-
     // 私信或at回复
     if(e.message_type === 'private' || e.atme) {
       const raw_message = e.message.filter(item => item.type === 'text').map(item => item.text).join().trim()
       if(!raw_message) return
-      const response = await trackSession.sendMessage(raw_message, {
-        timeoutMs: 2 * 60 * 1000
-      })
-      e.reply(response, true) //true表示引用对方的消息
+      try {
+        const response = await trackSession.sendMessage(raw_message, {
+          timeoutMs: 2 * 60 * 1000
+        })
+        e.reply(response, true) //true表示引用对方的消息
+      }catch(err) {
+        e.reply('出现错误，请稍后再试' + err, true)
+      }
     }
 
   })
@@ -41,4 +43,7 @@ async function main() {
 
 main()
   .then(console.log)
-  .catch(console.trace)
+  .catch((err) => {
+    console.trace(err)
+    // main()
+  })

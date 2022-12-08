@@ -1,0 +1,28 @@
+{
+  "name": "chat_gpt_oicq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tsx src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/easydu2002/grasscutter-oicq.git"
+  },
+  "author": "easydu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/easydu2002/grasscutter-oicq/issues"
+  },
+  "homepage": "https://github.com/easydu2002/grasscutter-oicq#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.11"
+  },
+  "dependencies": {
+    "chatgpt": "^2.0.3",
+    "dotenv": "^16.0.3",
+    "oicq": "^2.3.1"
+  }
+}

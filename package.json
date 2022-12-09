@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/easydu2002/grasscutter-oicq#readme",
   "devDependencies": {
-    "@types/node": "^18.11.11"
+    "@types/node": "^18.11.11",
+    "@types/node-schedule": "^2.1.0"
   },
   "dependencies": {
     "chatgpt": "^2.0.3",
     "dotenv": "^16.0.3",
-    "oicq": "^2.3.1"
+    "node-schedule": "^2.1.0",
+    "oicq": "^2.3.1",
+    "winston": "^3.8.2"
   }
 }

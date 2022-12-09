@@ -1,4 +1,4 @@
-
+# usage
 
 1. 项目根目录创建 .env文件
 
@@ -12,5 +12,10 @@
    ```bash
    pnpm install && pnpm dev
    ```
+   也可以使用其它的包管理工具
 
 3. 扫码登录即可
+
+# example
+
+![Screenshot_20221209_221507_com tencent tim](https://user-images.githubusercontent.com/59076088/206724421-b77ba55a-6428-4cd0-932f-22559d5677c1.jpg)

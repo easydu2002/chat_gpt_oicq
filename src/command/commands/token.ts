@@ -1,6 +1,5 @@
 import { config } from 'src/config'
 import { initChatGPT } from 'src/core/chat-gpt'
-import { initQICQ } from 'src/core/oicq'
 import { writeEnv } from 'src/util/env'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'

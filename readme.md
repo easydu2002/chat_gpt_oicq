@@ -44,15 +44,18 @@
 - /server 服务相关操作
 - /help 
 
+![1670664378022](https://user-images.githubusercontent.com/59076088/206843257-2dcd4f88-67c9-4fd8-ae3b-d0507e62ef29.png)
+
+
 # 常见问题
 
 1. **[启动错误]**  ChatGPT invalid session token
 
    .env 文件没有设置token
 
-2. **[启动错误] ** ChatGPT failed to refresh auth token. Error: Unauthorized
+2. **[启动错误]** ChatGPT failed to refresh auth token. Error: Unauthorized
 
-   token 错误 
+   .env 的 token 不对 
 
 3. **[启动错误|运行错误]** ChatGPT failed to refresh auth token. Error: session token may have expired
 
@@ -65,5 +68,5 @@
 
 
 # 效果
-
+![image](https://user-images.githubusercontent.com/59076088/206843285-9fdf53e6-a0c7-4432-89b4-75f56104affc.png)
 ![Screenshot_20221209_221507_com tencent tim](https://user-images.githubusercontent.com/59076088/206724421-b77ba55a-6428-4cd0-932f-22559d5677c1.jpg)

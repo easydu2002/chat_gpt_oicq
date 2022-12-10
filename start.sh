@@ -1,5 +1,5 @@
 if [ -d "node_modules" ]; then
-    echo "exist"
+    npm run dev
+else
+    npm install && npm run dev
 fi
-
-echo "start"

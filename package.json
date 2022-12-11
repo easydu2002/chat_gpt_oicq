@@ -30,7 +30,7 @@
     "typescript": "*"
   },
   "dependencies": {
-    "chatgpt": "^2.0.3",
+    "chatgpt": "^2.0.7",
     "dotenv": "^16.0.3",
     "node-schedule": "^2.1.0",
     "oicq": "^2.3.1",

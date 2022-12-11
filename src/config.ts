@@ -5,5 +5,6 @@ loadConfig()
 export const config = {
   adminQQ: Number(process.env.adminQQ) || 0,
   qq: Number(process.env.qq) || 0,
+  password: process.env.password,
   token: process.env.token
 }

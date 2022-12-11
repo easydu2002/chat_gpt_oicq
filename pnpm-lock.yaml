@@ -4,7 +4,7 @@ specifiers:
   '@types/node': ^18.11.11
   '@types/node-schedule': ^2.1.0
   '@typescript-eslint/eslint-plugin': ^5.0.0
-  chatgpt: ^2.0.3
+  chatgpt: ^2.0.7
   dotenv: ^16.0.3
   eslint: ^8.0.1
   eslint-config-standard-with-typescript: ^23.0.0
@@ -17,7 +17,7 @@ specifiers:
   winston: ^3.8.2
 
 dependencies:
-  chatgpt: registry.npmmirror.com/chatgpt/2.0.3
+  chatgpt: registry.npmmirror.com/chatgpt/2.0.7
   dotenv: registry.npmmirror.com/dotenv/16.0.3
   node-schedule: registry.npmmirror.com/node-schedule/2.1.0
   oicq: registry.npmmirror.com/oicq/2.3.1
@@ -520,10 +520,10 @@ packages:
     version: 2.0.2
     dev: false
 
-  registry.npmmirror.com/chatgpt/2.0.3:
-    resolution: {integrity: sha512-Rpa82qqtCyGEqSJVZ9rn8cappczP2lYtTXGEBLhccmuQFgATmxBhg4AMffVnsCTmSWNi2hbrBEJcF0wLFpM35A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chatgpt/-/chatgpt-2.0.3.tgz}
+  registry.npmmirror.com/chatgpt/2.0.7:
+    resolution: {integrity: sha512-+yEWRFl+vZbuXI2T96G1WZjE8g2eYs8Czi5pr/EpE64fPOVsZxQw3cgWETbGYICYD7mSpvh00r2fVHQfRM0NNg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/chatgpt/-/chatgpt-2.0.7.tgz}
     name: chatgpt
-    version: 2.0.3
+    version: 2.0.7
     engines: {node: '>=16.8'}
     dependencies:
       eventsource-parser: registry.npmmirror.com/eventsource-parser/0.0.5

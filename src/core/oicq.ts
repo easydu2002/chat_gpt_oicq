@@ -35,12 +35,27 @@ export async function initQICQ (initMessageHandler?: MessageHandler[]) {
     client.sendPrivateMsg(config.adminQQ, '已上线~')
   })
 
+  doLogin(client)
+
+  return client
+}
+
+function doLogin (client: Client) {
+  // 有密码滑块登录（不好用，先搁置着）
+  // if (config.password) {
+  //   client.on('system.login.slider', function (e) {
+  //     console.log('输入ticket：')
+  //     process.stdin.once('data', ticket => this.submitSlider(String(ticket).trim()))
+  //   }).login(config.password)
+  //   client.on('system.login.device', function (e) {
+  //     console.log('e.url', e.url)
+  //   })
+  // } else {
   client.on('system.login.qrcode', function (e) {
     // 扫码后按回车登录
     process.stdin.once('data', () => {
       this.login()
     })
   }).login()
-
-  return client
+  // }
 }

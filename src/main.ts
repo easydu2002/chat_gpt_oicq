@@ -1,4 +1,3 @@
-import { ChatGPTAPI } from 'chatgpt'
 import { validEnv } from './util/env'
 import logger from './util/log'
 import { initQICQ } from './core/oicq'

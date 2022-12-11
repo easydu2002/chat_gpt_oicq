@@ -15,6 +15,6 @@ export function getChatGPTApi () {
   return api
 }
 
-export function getCahtGPTSession () {
+export function getChatGPTSession () {
   return session || (session = api.getConversation())
 }

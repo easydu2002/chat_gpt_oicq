@@ -75,3 +75,10 @@
 # 效果
 
 ![Screenshot_20221209_221507_com tencent tim](https://user-images.githubusercontent.com/59076088/206724421-b77ba55a-6428-4cd0-932f-22559d5677c1.jpg)
+
+
+
+# 感谢
+
+- https://github.com/transitive-bullshit/chatgpt-api
+- https://chat.openai.com/

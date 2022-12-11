@@ -25,7 +25,7 @@ function messageErrorHandler (sender: Sender, err: any) {
     sender.reply('token 过期，请使用/token set 重新设置token')
   } else if (err.message === 'ChatGPT failed to refresh auth token. TypeError: fetch failed') {
     // （后续加个配置文件自己处理错误消息吧
-    sender.reply('emmm... 脑子短线啦，可以再说一遍吗~~')
+    sender.reply('emmm... 脑子掉线啦，可以再说一遍吗~~')
   } else if (err.message === 'ChatGPT timed out waiting for response') {
     sender.reply('连接超时，请稍后再试~')
   } else if (err.message === 'ChatGPTAPI error 429') {

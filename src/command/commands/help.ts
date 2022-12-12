@@ -1,9 +1,9 @@
+import commands from '.'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
-import { getAllCommand } from '../command-list'
 
 function buildHelpMessage (isAdmin: boolean) {
-  const command = getAllCommand().filter(item => {
+  const command = commands.filter(item => {
     const hasPermission = isAdmin ? item.requiredAdministrator : true
     return item.label !== 'help' && hasPermission
   })

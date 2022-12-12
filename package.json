@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx src/main.ts",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "build:win64": "pkg --t node18-win src/main.ts"
   },
   "repository": {
     "type": "git",

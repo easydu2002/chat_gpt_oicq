@@ -5,7 +5,11 @@ let api: ChatGPTAPI
 let session: ChatGPTConversation
 
 export async function initChatGPT () {
-  api = new ChatGPTAPI({ sessionToken: config.token as string })
+  api = new ChatGPTAPI({
+    sessionToken: config.token,
+    clearanceToken: config.clearanceToken,
+    userAgent: config.userAgent
+  })
   await api.ensureAuth()
   session = api.getConversation()
   return api

@@ -6,9 +6,9 @@ import logger from 'src/util/log'
 export const chatGPTHandler: MessageHandler = async function (sender) {
   const api = getChatGPTApi()
   if (!api) return true
-  const trackSession = getChatGPTSession()
+  // const trackSession = getChatGPTSession()
   try {
-    const response = await trackSession.sendMessage(sender.textMessage)
+    // const response = await trackSession.sendMessage(sender.textMessage)
     sender.reply(response)
   } catch (err) {
     messageErrorHandler(sender, err)

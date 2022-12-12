@@ -8,5 +8,6 @@ export const config = {
   password: process.env.password,
   token: process.env.token as string,
   clearanceToken: process.env.clearanceToken as string,
-  userAgent: process.env.userAgent as string
+  userAgent: process.env.userAgent as string,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY as string
 }

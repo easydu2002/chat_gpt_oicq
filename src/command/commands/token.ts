@@ -26,7 +26,7 @@ class TokenCommand extends BaseCommand {
           sender.reply('请输入正确的token!')
           break
         }
-        config.token = params[1]
+        config.api.token = params[1]
         await writeEnv(config)
         await initChatGPT()
         sender.reply('token重置成功!')

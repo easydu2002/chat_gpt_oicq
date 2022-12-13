@@ -13,7 +13,6 @@ export const config = {
     email: '',
     password: '',
     token: '',
-    clearanceToken: '',
-    userAgent: ''
+    browerPath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
   }
 }

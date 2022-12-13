@@ -3,9 +3,9 @@
 - [环境要求](#环境要求)
 
 - [用法](#用法)
-  - [非官方版](#非官方版)
+  - [启动步骤](#启动步骤)
   
-  - [OpenAI 官方版](#OpenAI 官方版)
+  - [OpenAI 官方版概述](#OpenAI 官方版概述)
   
 - [命令](#命令)
 
@@ -21,25 +21,39 @@
 
 ## 指南
 
-### 非官方版(失效)
+新程序先执行一遍，会在项目根目录创建一个config.json
 
-> token的获取, 另见文章 [ChatGPT 低成本体验与实践](https://editor.csdn.net/md/?articleId=128231073)
+### 启动步骤启动步骤
 
-1. **项目根目录创建 .env文件（第一次执行也会自动创建这个文件**
+1. **编辑config.json**
 
-   填入以下内容 
+     ```json
+     {
+       "adminQQ": 1307053737, // 管理员qq
+       "botQQ": 3481477273, // 机器人qq
+       "officialAPI": {
+         "enable": true,
+         "key": "sk-",
+         "model": "text-davinci-003"
+       },
+       "api": {
+         "enable": false,
+         "email": "",
+         "password": "",
+         "token": "ey...",
+         "clearanceToken": "",
+         "userAgent": ""
+       }
+     }
+     ```
 
-      ```env
-   adminQQ=1307053737
-   qq=3481477273
-   token=eyJhbGciOiJxxx
-      ```
+     `officialAPI.enable` 设置为true表示使用官方API版，
 
-     **adminQQ**: 管理员QQ，部分命令需要管理员QQ发送才能使用
+     `officialAPI.key` key申请地址 https://beta.openai.com/account/api-keys
 
-     **qq**: 机器人QQ
+     `api.enable` 设置为true表示使用非官方版 **(免费)**, 同时启用会优先使用这个
 
-     **token:** 配置token即可 , token获取另见 [ChatGPT 低成本体验与实践](https://blog.csdn.net/qq_25211081/article/details/128231073)
+     **（非官方版目前还没有找到合适的解决方案！先忽略api配置使用officialAPI即可）**
 
 2. **执行如下命令（提示安装tsx确认即可）**
 
@@ -51,13 +65,13 @@
 
       记得要用机器人qq扫码..
 
-     **注:** 目前是使用的扫码登录,需要确保在一个局域网环境内, 上云的话就是先在本地登录,然后copy根目录生成的data, 登录成功会收到机器人发来的已经上线消息~
+      **注:** 目前是使用的扫码登录,需要确保在一个局域网环境内, 上云的话就是先在本地登录,然后copy根目录生成的data, 登录成功会收到机器人发来的已经上线消息~
 
 
 
 **注: 非私聊需要@**
 
-## OpenAI 官方版
+## OpenAI 官方版概述
 
 > https://openai.com/api/pricing
 >
@@ -66,15 +80,17 @@
 ### 如何选择模型？
 
 > 具体另见 https://beta.openai.com/docs/models/gpt-3
+>
+> 对应config.json配置为 `officialAPI.model`
 
 该项目目前只提供基本模型的配置 (中文聊天建议就用 **text-davinci-003** ，前三种中文支持都不够好...)
 
-| 模型    | 代号             | 价格                |
+| 模型    | 配置编号         | 价格                |
 | ------- | ---------------- | ------------------- |
-| Ada     | text-ada-001     | $0.0004/1K tokens   | 
-| Babbage | text-babbage-001 | $0.0005 / 1K tokens | 
-| Curie   | text-curie-001   | $0.0020 / 1K tokens | 
-| Davinci | text-davinci-003 | $0.0200 / 1K tokens | 
+| Ada     | text-ada-001     | $0.0004/1K tokens   |
+| Babbage | text-babbage-001 | $0.0005 / 1K tokens |
+| Curie   | text-curie-001   | $0.0020 / 1K tokens |
+| Davinci | text-davinci-003 | $0.0200 / 1K tokens |
 
 **Ada: **快，
 
@@ -84,25 +100,9 @@
 
 **Davinci：**训练资料止于2021年6月，前面三个止于2019年10月，懂得更多，前三种能做的这个都能做
 
-****
-
-
-
 ### tokens 如何计算的？
 
 > 另见 https://beta.openai.com/tokenizer
-
-中文的一般汉字为两个tokens，罕见的比如biangbiang面的biang需要占4个tokends(应该是取决于某个编码码表), 中文的标点符号通常会占用2-3个tokens （可以在配置文件默认启用tokens优化，把一些不影响语义的标点换成英文的）
-
-英文通常一个词占一个tokens，比如happy虽然有五个字符但是只占一个tokens
-
-另外空格也会占用一个tokens，tokens优化也会移除不必要的空格
-
-
-
-另外为了防止恶意刷tokens，可以在配置文件配置消息上限
-
-
 
 ## 命令
 

@@ -3,6 +3,7 @@ import { getChatGPTSession, getChatGPTApi } from 'src/core/chat-gpt'
 import { Sender } from 'src/model/sender'
 import { MessageHandler } from 'src/types'
 import logger from 'src/util/log'
+import { filterTokens } from 'src/util/message'
 
 export const chatGPTHandler: MessageHandler = async function (sender) {
   if (!config.api.enable) return true
@@ -11,7 +12,7 @@ export const chatGPTHandler: MessageHandler = async function (sender) {
   if (!api) return true
   const trackSession = getChatGPTSession()
   try {
-    const response = await trackSession.sendMessage(sender.textMessage)
+    const response = await trackSession.sendMessage(filterTokens(sender.textMessage))
     sender.reply(response)
   } catch (err) {
     messageErrorHandler(sender, err)

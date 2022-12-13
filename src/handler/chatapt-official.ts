@@ -4,6 +4,7 @@ import { getOpenApi } from 'src/core/openai'
 import { Sender } from 'src/model/sender'
 import { MessageHandler } from 'src/types'
 import logger from 'src/util/log'
+import { filterTokens, resolveMessage } from 'src/util/message'
 
 /**
  * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
@@ -26,7 +27,7 @@ export const chatGPTOfficialHandler: MessageHandler = async function (sender) {
     const openAi = getOpenApi()
     const completion = await openAi.createCompletion({
       model: config.officialAPI.model,
-      prompt: `${trackMessage}\nHuman: ${sender.textMessage}\nAI:`,
+      prompt: `${trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`,
       temperature: 0.9,
       max_tokens: 256, // https://beta.openai.com/docs/guides/completion/best-practices
       top_p: 1,

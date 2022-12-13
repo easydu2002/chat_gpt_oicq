@@ -4,7 +4,7 @@ import { getOpenApi } from 'src/core/openai'
 import { Sender } from 'src/model/sender'
 import { MessageHandler } from 'src/types'
 import logger from 'src/util/log'
-import { filterTokens, resolveMessage } from 'src/util/message'
+import { filterTokens } from 'src/util/message'
 
 /**
  * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003

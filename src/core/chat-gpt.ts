@@ -6,17 +6,17 @@ let session: ChatGPTConversation
 
 export async function initChatGPT () {
   api = new ChatGPTAPI({
-    sessionToken: config.token,
-    clearanceToken: config.clearanceToken,
-    userAgent: config.userAgent
+    sessionToken: config.api.token,
+    clearanceToken: config.api.clearanceToken,
+    userAgent: config.api.userAgent
   })
   await api.ensureAuth()
   session = api.getConversation()
   return api
 }
 
-export function getChatGPTApi () {
-  return api
+export async function getChatGPTApi () {
+  return api || await initChatGPT()
 }
 
 export function getChatGPTSession () {

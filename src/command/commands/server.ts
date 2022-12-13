@@ -1,5 +1,5 @@
 import { initChatGPT } from 'src/core/chat-gpt'
-import { initQICQ } from 'src/core/oicq'
+import { initOicq } from 'src/core/oicq'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
 
@@ -18,7 +18,7 @@ class ServerCommand extends BaseCommand {
       case 'reboot':
         sender.reply('重启中, 稍等~')
         await initChatGPT()
-        await initQICQ()
+        await initOicq()
         break
       case 'status':
         sender.reply(JSON.stringify(process.memoryUsage()), true)

@@ -1,15 +1,14 @@
-import { validEnv } from './util/env'
 import logger from './util/log'
-import { initQICQ } from './core/oicq'
-// import { initChatGPT } from './core/chat-gpt'
+import { initOicq } from './core/oicq'
 import MessageHandlers from './handler'
+import { loadConfig, validConfigFile } from './util/config'
+import { config } from './config'
 
 async function main () {
-  await validEnv()
+  await validConfigFile()
+  Object.assign(config, await loadConfig())
 
-  // await initChatGPT()
-
-  initQICQ(MessageHandlers)
+  initOicq(MessageHandlers)
 }
 
 main()

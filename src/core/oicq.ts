@@ -7,10 +7,10 @@ import logger from 'src/util/log'
 let client: Client
 let messageHandler: MessageHandler[] = []
 
-export async function initQICQ (initMessageHandler?: MessageHandler[]) {
+export async function initOicq (initMessageHandler?: MessageHandler[]) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
   await client?.logout()
-  client = createClient(config.qq, {
+  client = createClient(config.botQQ, {
     log_level: 'warn',
     data_dir: process.cwd() + '/data'
   })

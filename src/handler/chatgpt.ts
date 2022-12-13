@@ -1,14 +1,17 @@
+import { config } from 'src/config'
 import { getChatGPTSession, getChatGPTApi } from 'src/core/chat-gpt'
 import { Sender } from 'src/model/sender'
 import { MessageHandler } from 'src/types'
 import logger from 'src/util/log'
 
 export const chatGPTHandler: MessageHandler = async function (sender) {
-  const api = getChatGPTApi()
+  if (!config.api.enable) return true
+
+  const api = await getChatGPTApi()
   if (!api) return true
-  // const trackSession = getChatGPTSession()
+  const trackSession = getChatGPTSession()
   try {
-    // const response = await trackSession.sendMessage(sender.textMessage)
+    const response = await trackSession.sendMessage(sender.textMessage)
     sender.reply(response)
   } catch (err) {
     messageErrorHandler(sender, err)

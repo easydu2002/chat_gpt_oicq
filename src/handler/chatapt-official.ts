@@ -1,4 +1,5 @@
 import { segment } from 'oicq'
+import { config } from 'src/config'
 import { getOpenApi } from 'src/core/openai'
 import { Sender } from 'src/model/sender'
 import { MessageHandler } from 'src/types'
@@ -19,10 +20,12 @@ let trackMessage = ''
  * @returns
  */
 export const chatGPTOfficialHandler: MessageHandler = async function (sender) {
+  if (!config.officialAPI.enable) return true
+
   try {
     const openAi = getOpenApi()
     const completion = await openAi.createCompletion({
-      model: 'text-davinci-003',
+      model: config.officialAPI.model,
       prompt: `${trackMessage}\nHuman: ${sender.textMessage}\nAI:`,
       temperature: 0.9,
       max_tokens: 256, // https://beta.openai.com/docs/guides/completion/best-practices

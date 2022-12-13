@@ -1,10 +1,27 @@
-[TOC]
+# OepnAI QQBot
 
-# 环境要求
+- [环境要求](#环境要求)
 
-- [Node.js](https://nodejs.org/en/) >= 16.8
+- [用法](#用法)
+  - [非官方版](#非官方版)
+  
+  - [OpenAI 官方版](#OpenAI 官方版)
+  
+- [命令](#命令)
 
-# 用法
+- [常见问题](#常见问题)
+
+- [效果](#效果)
+
+- [感谢](#感谢)
+
+## 环境要求
+
+- [Node.js](https://nodejs.org/en/) >= 18
+
+## 指南
+
+### 非官方版(失效)
 
 > token的获取, 另见文章 [ChatGPT 低成本体验与实践](https://editor.csdn.net/md/?articleId=128231073)
 
@@ -40,9 +57,54 @@
 
 **注: 非私聊需要@**
 
+## OpenAI 官方版
+
+> https://openai.com/api/pricing
+>
+> 新用户有18美元的免费余额，但不是长期存在，三个月后会过期
+
+### 如何选择模型？
+
+> 具体另见 https://beta.openai.com/docs/models/gpt-3
+
+该项目目前只提供基本模型的配置 (中文聊天建议就用 **text-davinci-003** ，前三种中文支持都不够好...)
+
+| 模型    | 代号             | 价格                |
+| ------- | ---------------- | ------------------- |
+| Ada     | text-ada-001     | $0.0004/1K tokens   | 
+| Babbage | text-babbage-001 | $0.0005 / 1K tokens | 
+| Curie   | text-curie-001   | $0.0020 / 1K tokens | 
+| Davinci | text-davinci-003 | $0.0200 / 1K tokens | 
+
+**Ada: **快，
+
+**Babbage：**适合用来做搜索
+
+**Curie：** 可以理解为 **Davinci**的阉割版， 中文聊天效果很差，，，说中文直接回英文翻译了..
+
+**Davinci：**训练资料止于2021年6月，前面三个止于2019年10月，懂得更多，前三种能做的这个都能做
+
+****
 
 
-# 命令
+
+### tokens 如何计算的？
+
+> 另见 https://beta.openai.com/tokenizer
+
+中文的一般汉字为两个tokens，罕见的比如biangbiang面的biang需要占4个tokends(应该是取决于某个编码码表), 中文的标点符号通常会占用2-3个tokens （可以在配置文件默认启用tokens优化，把一些不影响语义的标点换成英文的）
+
+英文通常一个词占一个tokens，比如happy虽然有五个字符但是只占一个tokens
+
+另外空格也会占用一个tokens，tokens优化也会移除不必要的空格
+
+
+
+另外为了防止恶意刷tokens，可以在配置文件配置消息上限
+
+
+
+## 命令
 
 > 用法：/命令 参数, 具体使用/help查看即可
 
@@ -53,7 +115,7 @@
 ![1670664378022](https://user-images.githubusercontent.com/59076088/206843257-2dcd4f88-67c9-4fd8-ae3b-d0507e62ef29.png)
 
 
-# 常见问题
+## 常见问题
 
 1. **[启动错误]**  ChatGPT invalid session token
 
@@ -76,13 +138,13 @@
 
 
 
-# 效果
+## 效果
 ![image](https://user-images.githubusercontent.com/59076088/206843285-9fdf53e6-a0c7-4432-89b4-75f56104affc.png)
 ![Screenshot_20221209_221507_com tencent tim](https://user-images.githubusercontent.com/59076088/206724421-b77ba55a-6428-4cd0-932f-22559d5677c1.jpg)
 
 
 
-# 感谢
+## 感谢
 
 - https://github.com/takayama-lily/oicq
 - https://github.com/transitive-bullshit/chatgpt-api

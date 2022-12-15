@@ -18,7 +18,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     model: 'text-davinci-003',
     identity: '' || [],
     maxTokens: 256,
-    maxTrackCount: 100,
+    maxTrackCount: 1,
     temperature: 0.9
   }
 

@@ -65,7 +65,8 @@
      有三种设置方式 (另见讨论[issue](https://github.com/easydu2002/chat_gpt_oicq/issues/3#issuecomment-1352287977))
 
      **下面以一个猫娘人格的为例**
-     ![W}8U6ZD`%GT97%NJ19450VO](https://user-images.githubusercontent.com/59076088/207781331-5caaa3d1-da2a-43f4-a2bd-9469563d01a6.png)
+     ![COX@362Q1QQZX~ND) 4DE`D](https://user-images.githubusercontent.com/59076088/207781791-ffcf459f-1a74-45ea-a03a-c439743a8e92.png)
+
 
 
      1. 设置一个值 (简单的作为一个对话提示，后续回答都会参考这里)

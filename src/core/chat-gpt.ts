@@ -1,15 +1,16 @@
-import { ChatGPTAPI, ChatGPTConversation } from 'chatgpt'
+import { ChatGPTAPI, ChatGPTConversation, getBrowser, getOpenAIAuth } from 'chatgpt'
 import { config } from 'src/config'
 
 let api: ChatGPTAPI
 let session: ChatGPTConversation
 
 export async function initChatGPT () {
-  api = new ChatGPTAPI({
-    sessionToken: config.api.token,
-    clearanceToken: config.api.clearanceToken,
-    userAgent: config.api.userAgent
+  const openAIAuth = await getOpenAIAuth({
+    email: config.api.email,
+    password: config.api.password,
+    browser: await getBrowser({ executablePath: config.api.browerPath })
   })
+  api = new ChatGPTAPI({ ...openAIAuth })
   await api.ensureAuth()
   session = api.getConversation()
   return api

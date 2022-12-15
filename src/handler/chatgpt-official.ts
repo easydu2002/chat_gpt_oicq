@@ -44,7 +44,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
       const openAi = getOpenApi()
       const completion = await openAi.createCompletion({
         model: this.config.model,
-        prompt: `${this.identity}\n${this.getTrackMessage()}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`,
+        prompt: `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`,
         temperature: this.config.temperature,
         max_tokens: this.config.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
         top_p: 1,
@@ -84,11 +84,12 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     return ''
   }
 
-  getTrackMessage () {
-    const max = this.config.maxTrackCount
-    if (max > this._trackMessage.length) {
-      this._trackMessage.splice(0, this._trackMessage.length - max)
-    }
-    return this._trackMessage
+  set trackMessage (val: string) {
+    this._trackMessage.push(val)
+    this._trackMessage.splice(0, this.trackMessage.length - this.config.maxTrackCount)
+  }
+
+  get trackMessage () {
+    return this._trackMessage.join('')
   }
 }

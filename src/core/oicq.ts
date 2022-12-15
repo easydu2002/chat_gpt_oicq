@@ -1,13 +1,13 @@
 import { Client, createClient } from 'oicq'
 import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
-import { MessageHandler } from 'src/types'
+import { BaseMessageHandler, MessageHandler } from 'src/types'
 import logger from 'src/util/log'
 
 let client: Client
-let messageHandler: MessageHandler[] = []
+let messageHandler: Array<MessageHandler | BaseMessageHandler>
 
-export async function initOicq (initMessageHandler?: MessageHandler[]) {
+export async function initOicq (initMessageHandler?: Array<MessageHandler | BaseMessageHandler>) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
   await client?.logout()
   client = createClient(config.botQQ, {
@@ -20,7 +20,13 @@ export async function initOicq (initMessageHandler?: MessageHandler[]) {
       const sender = new Sender(e)
       try {
         for (let i = 0; i < messageHandler.length; i++) {
-          if (!await messageHandler[i](sender)) {
+          let isStop = false
+          if (messageHandler[i] instanceof BaseMessageHandler) {
+            isStop = !await (messageHandler[i] as BaseMessageHandler).handle(sender)
+          } else if (typeof messageHandler[i] === 'function') {
+            isStop = !await (messageHandler[i] as MessageHandler)(sender)
+          }
+          if (isStop) {
             return
           }
         }

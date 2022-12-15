@@ -72,11 +72,16 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   getIdentity () {
     const identity = this.config.identity
 
-    if (identity instanceof Array) {
-      return `Human:${filterTokens(identity[0])}\nAI:${filterTokens(identity[0])}`
+    if (identity.length === 1) {
+      return filterTokens(identity[0])
     }
-
-    return filterTokens(identity)
+    if (identity.length === 2) {
+      return `Human:${filterTokens(identity[0])}\nAI:${filterTokens(identity[1])}`
+    }
+    if (identity.length === 3) {
+      return `${identity[0]}\nHuman:${filterTokens(identity[1])}\nAI:${filterTokens(identity[2])}`
+    }
+    return ''
   }
 
   getTrackMessage () {

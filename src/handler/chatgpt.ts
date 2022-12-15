@@ -10,7 +10,8 @@ export class ChatGPTHandler extends BaseMessageHandler {
   config = {
     enable: false,
     email: '',
-    password: ''
+    password: '',
+    browserPath: ''
   }
 
   async load (config: Object) {

@@ -11,7 +11,7 @@ export async function loadConfig () {
 
 export async function validConfigFile () {
   if (!existsSync(configFile)) {
-    console.error('请正确配置config.json文件(已在根目录自动创建，填写对应值即可)')
+    console.error(`请正确配置config.json文件(已自动生成 ${configFile} ，填写对应值即可)`)
     await writeConfig(config)
     process.exit()
   }

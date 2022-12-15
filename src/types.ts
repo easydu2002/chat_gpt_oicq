@@ -25,5 +25,10 @@ export abstract class BaseMessageHandler {
    */
   load (config: Object): void | Promise<void> { Object.assign(this.config, config) }
 
+  /**
+   * 重启钩子
+   */
+  reboot (): void | Promise<void> {}
+
   handle: MessageHandler
 }

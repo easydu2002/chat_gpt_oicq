@@ -1,7 +1,8 @@
-import { initChatGPT } from 'src/core/chat-gpt'
 import { initOicq } from 'src/core/oicq'
+import { BaseMessageHandler } from 'src/types'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
+import messageHandlers from './../../handler'
 
 class ServerCommand extends BaseCommand {
   label = 'server'
@@ -17,7 +18,13 @@ class ServerCommand extends BaseCommand {
     switch (params[0]) {
       case 'reboot':
         sender.reply('重启中, 稍等~')
-        await initChatGPT()
+        await Promise.all(
+          messageHandlers.map(async item => {
+            if (item instanceof BaseMessageHandler) {
+              await item.reboot()
+            }
+          })
+        )
         await initOicq()
         break
       case 'status':

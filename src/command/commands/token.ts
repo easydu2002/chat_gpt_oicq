@@ -1,5 +1,4 @@
 import { config } from 'src/config'
-import { initChatGPT } from 'src/core/chat-gpt'
 import { writeEnv } from 'src/util/env'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
@@ -28,7 +27,6 @@ class TokenCommand extends BaseCommand {
         }
         config.api.token = params[1]
         await writeEnv(config)
-        await initChatGPT()
         sender.reply('token重置成功!')
         break
       default:

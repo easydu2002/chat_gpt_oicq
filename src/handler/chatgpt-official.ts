@@ -1,4 +1,4 @@
-import { getOpenApi } from 'src/core/openai'
+import { Configuration, OpenAIApi } from 'openai'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
@@ -32,17 +32,32 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
    */
   identity = ''
 
+  _openAI: OpenAIApi
+
+  initOpenAI () {
+    if (!this.config.enable) return
+
+    const configuration = new Configuration({
+      apiKey: this.config.key
+    })
+    this._openAI = new OpenAIApi(configuration)
+  }
+
   async load (config: Object) {
     super.load(config)
+    this.initOpenAI()
     this.identity = this.getIdentity()
+  }
+
+  reboot () {
+    this.initOpenAI()
   }
 
   handle = async (sender: Sender) => {
     if (!this.config.enable) return true
 
     try {
-      const openAi = getOpenApi()
-      const completion = await openAi.createCompletion({
+      const completion = await this._openAI.createCompletion({
         model: this.config.model,
         prompt: `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`,
         temperature: this.config.temperature,

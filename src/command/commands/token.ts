@@ -1,4 +1,8 @@
 import { config } from 'src/config'
+import messageHandlers from 'src/handler'
+import { ChatGPTHandler } from 'src/handler/chatgpt'
+import { ChatGPTOfficialHandler } from 'src/handler/chatgpt-official'
+import { writeConfig } from 'src/util/config'
 import { writeEnv } from 'src/util/env'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
@@ -6,7 +10,8 @@ import { BaseCommand } from '../command'
 class TokenCommand extends BaseCommand {
   label = 'token'
   usage = [
-    'set [token] // 设置token'
+    'set [token] // 设置token',
+    'setkey [key] // 设置官方api key'
   ]
 
   requiredAdministrator = true
@@ -28,6 +33,13 @@ class TokenCommand extends BaseCommand {
         config.api.token = params[1]
         await writeEnv(config)
         sender.reply('token重置成功!')
+        break
+      case 'setkey':
+        const handler = messageHandlers.find(item => item instanceof ChatGPTOfficialHandler) as ChatGPTOfficialHandler
+        if (!handler) return
+        handler.load({ ...handler.config, key: params[1] })
+        await writeConfig({ ...config, [handler.name]: handler.config })
+        sender.reply('key重置成功!')
         break
       default:
         sender.reply(this.helpDoc, true)

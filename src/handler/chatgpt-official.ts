@@ -8,15 +8,26 @@ function messageErrorHandler (sender: Sender, err: any) {
   sender.reply(`发生错误\n${err}`)
 }
 
+interface ChatGPTOfficialConfig {
+
+  enable: boolean
+  key: string
+  model: string
+  identity: []
+  maxTokens: number
+  maxTrackCount: number
+  temperature: number
+}
+
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
   name = 'officialAPI'
 
-  config = {
+  config: ChatGPTOfficialConfig = {
 
     enable: true,
     key: '',
     model: 'text-davinci-003',
-    identity: '' || [],
+    identity: [],
     maxTokens: 256,
     maxTrackCount: 1,
     temperature: 0.9
@@ -43,7 +54,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     this._openAI = new OpenAIApi(configuration)
   }
 
-  async load (config: Object) {
+  async load (config: ChatGPTOfficialConfig) {
     super.load(config)
     this._trackMessage = Array.from(new Array(config.maxTrackCount), () => '')
     this.initOpenAI()

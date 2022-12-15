@@ -4,10 +4,17 @@ import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
 
+interface ChatGPTConfig {
+  enable: boolean
+  email: string
+  password: string
+  browserPath: string
+}
+
 export class ChatGPTHandler extends BaseMessageHandler {
   name = 'api'
 
-  config = {
+  config: ChatGPTConfig = {
     enable: false,
     email: '',
     password: '',
@@ -18,7 +25,7 @@ export class ChatGPTHandler extends BaseMessageHandler {
 
   _trackSession: ChatGPTConversation
 
-  async load (config: Object) {
+  async load (config: ChatGPTConfig) {
     super.load(config)
     if (!this.config.enable) return
     await this.initChatGPT()

@@ -56,7 +56,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
       // console.log(completion.data.choices[0].finish_reason)
       if (respMsg) {
       // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${respMsg}`
-        this._trackMessage.push(`\nHuman:${respMsg}\nAI:${respMsg}`)
+        this.pushTrackMessage(`\nHuman:${respMsg}\nAI:${respMsg}`)
         sender.reply(respMsg, true)
       } else {
         this._trackMessage.length = 0
@@ -84,7 +84,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     return ''
   }
 
-  set trackMessage (val: string) {
+  pushTrackMessage (val: string) {
     this._trackMessage.push(val)
     this._trackMessage.splice(0, this.trackMessage.length - this.config.maxTrackCount)
   }

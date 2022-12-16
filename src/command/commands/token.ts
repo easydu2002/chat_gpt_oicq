@@ -34,13 +34,14 @@ class TokenCommand extends BaseCommand {
         await writeEnv(config)
         sender.reply('token重置成功!')
         break
-      case 'setkey':
+      case 'setkey': {
         const handler = messageHandlers.find(item => item instanceof ChatGPTOfficialHandler) as ChatGPTOfficialHandler
         if (!handler) return
         handler.load({ ...handler.config, key: params[1] })
         await writeConfig({ ...config, [handler.name]: handler.config })
         sender.reply('key重置成功!')
         break
+      }
       default:
         sender.reply(this.helpDoc, true)
     }

@@ -1,11 +1,32 @@
 import { Client, createClient } from 'oicq'
 import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
-import { BaseMessageHandler, MessageHandler } from 'src/types'
+import { BaseMessageHandler, MessageEvent, MessageHandler } from 'src/types'
 import logger from 'src/util/log'
+import { GuildApp } from 'oicq-guild'
 
 let client: Client
 let messageHandler: Array<MessageHandler | BaseMessageHandler>
+
+async function handleMessage (e: MessageEvent) {
+  const sender = new Sender(e)
+  try {
+    for (let i = 0; i < messageHandler.length; i++) {
+      let isStop = false
+      if (messageHandler[i] instanceof BaseMessageHandler) {
+        isStop = !await (messageHandler[i] as BaseMessageHandler).handle(sender)
+      } else if (typeof messageHandler[i] === 'function') {
+        isStop = !await (messageHandler[i] as MessageHandler)(sender)
+      }
+      if (isStop) {
+        return
+      }
+    }
+  } catch (err) {
+    logger.error(err)
+    sender.reply(`发生错误: ${err}`)
+  }
+}
 
 export async function initOicq (initMessageHandler?: Array<MessageHandler | BaseMessageHandler>) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
@@ -17,28 +38,20 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
   client.on('message', async e => {
     // 私信或at回复
     if (e.message_type === 'private' || e.atme) {
-      const sender = new Sender(e)
-      try {
-        for (let i = 0; i < messageHandler.length; i++) {
-          let isStop = false
-          if (messageHandler[i] instanceof BaseMessageHandler) {
-            isStop = !await (messageHandler[i] as BaseMessageHandler).handle(sender)
-          } else if (typeof messageHandler[i] === 'function') {
-            isStop = !await (messageHandler[i] as MessageHandler)(sender)
-          }
-          if (isStop) {
-            return
-          }
-        }
-      } catch (err) {
-        logger.error(err)
-        sender.reply(`发生错误: ${err}`)
-      }
+      handleMessage(e)
     }
   })
 
   client.on('system.online', () => {
     client.sendPrivateMsg(config.adminQQ, '已上线~')
+  })
+
+  const app = GuildApp.bind(client)
+  app.on('message', e => {
+    const isAt = e.message.some(item => item.id === app.tiny_id)
+    if (isAt) {
+      handleMessage(e)
+    }
   })
 
   doLogin(client)

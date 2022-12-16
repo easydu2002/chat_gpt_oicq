@@ -1,3 +1,5 @@
+import type { DiscussMessageEvent, GroupMessageEvent, PrivateMessageEvent } from 'oicq'
+import type { GuildMessage } from 'oicq-guild/lib/message'
 import { Sender } from './model/sender'
 
 export interface envConfig {
@@ -5,6 +7,8 @@ export interface envConfig {
   qq: string
   token: string
 }
+
+export type MessageEvent = PrivateMessageEvent | GroupMessageEvent | DiscussMessageEvent | GuildMessage
 
 /**
  * 返回值取决于是否继续， true：继续，false： 中断

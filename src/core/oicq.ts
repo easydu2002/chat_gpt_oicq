@@ -4,6 +4,7 @@ import { Sender } from 'src/model/sender'
 import { BaseMessageHandler, MessageEvent, MessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { GuildApp } from 'oicq-guild'
+import inquirer from 'inquirer'
 
 let client: Client
 let messageHandler: Array<MessageHandler | BaseMessageHandler>
@@ -72,9 +73,15 @@ function doLogin (client: Client) {
   // } else {
   client.on('system.login.qrcode', function (e) {
     // 扫码后按回车登录
-    process.stdin.once('data', () => {
-      this.login()
-    })
+    // process.stdin.once('data', () => {
+    //   this.login()
+    // })
+
+    // 用了inquirer还不能回车了？？参考下yunzai的实现
+    inquirer.prompt({ type: 'input', message: '回车刷新二维码，等待扫码中...\n', name: 'enter' })
+      .then(async () => {
+        this.login()
+      })
   }).login()
   // }
 }

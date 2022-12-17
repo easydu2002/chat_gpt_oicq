@@ -3,11 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": "src/main.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx src/main.ts",
     "lint": "eslint . --fix",
-    "build:win64": "pkg --t node18-win src/main.ts"
+    "build:win64": "pkg . --t win",
+    "build:t": "pkg --t win test.js"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*"
+    ],
+    "outputPath": "build",
+    "output": "ChatGPTQQ.exe"
   },
   "repository": {
     "type": "git",
@@ -31,8 +40,10 @@
     "typescript": "*"
   },
   "dependencies": {
+    "@types/inquirer": "^9.0.3",
     "chatgpt": "^2.3.0",
     "dotenv": "^16.0.3",
+    "inquirer": "^9.1.4",
     "node-schedule": "^2.1.0",
     "oicq": "^2.3.1",
     "oicq-guild": "^0.1.0",

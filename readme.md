@@ -13,7 +13,7 @@
 
 
 
-<img src="https://img.shields.io/github/repo-size/easydu2002/chat_gpt_oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/openai?color=black" alt="dependency-version" />
+<img src="https://img.shields.io/github/repo-size/easydu2002/chat_gpt_oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/openai?color=black" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/chatgpt" alt="dependency-version" />
 
 
 

@@ -7,3 +7,8 @@ data
 log
 
 config.json
+
+version-local
+package-lock.json
+
+build

@@ -1,5 +1,6 @@
-![DALL·E 2022-12-17 13 24 49 - 我开发了一款基于OpenAI的聊天机器人，帮我设计个logo](https://user-images.githubusercontent.com/59076088/208226782-42356b62-5245-43e5-96f2-a42109ad3a32.png)
 
+
+![YQ`@SO_A@57DC@T$PU95MSO](https://user-images.githubusercontent.com/59076088/208228558-797a6bca-c794-4173-8d0d-176f8e9d90d6.png)
 
 
 # OpenAI QQBot
@@ -13,6 +14,7 @@
 
 
 <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/vue?color=brightgreen" alt="dependency-version" />
+
 
 
 

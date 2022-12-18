@@ -3,6 +3,8 @@ import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
+import { GroupMessage } from 'oicq'
+import { Session } from '../util/session'
 
 function messageErrorHandler (sender: Sender, err: any) {
   sender.reply(`发生错误\n${err}`)
@@ -42,6 +44,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
    */
   identity = ''
+  sessions = new Map()
 
   _openAI: OpenAIApi
 
@@ -67,6 +70,12 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
 
   handle = async (sender: Sender) => {
     if (!this.config.enable) return true
+    const id = sender._eventObject instanceof GroupMessage ? sender._eventObject.group_id : sender._eventObject.sender.user_id
+    let session = this.sessions.get(id)
+    if (typeof session === 'undefined' || (new Date().getTime() - session.last_time.getTime()) > 1000 * 60 * 5) {
+      session = new Session(Array.from(new Array(this.config.maxTrackCount), () => ''), new Date())
+      console.log(`新建session:${id}`)
+    }
 
     try {
       const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
@@ -83,7 +92,14 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
       const respMsg = completion.data.choices[0].text
       if (respMsg) {
       // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${respMsg}`
-        this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
+      //   this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
+        session.trackMessage.push(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
+        if (session.trackMessage.length > this.config.maxTrackCount) {
+          session.trackMessage.shift()
+        }
+        session.last_time = new Date()
+        this.sessions.set(id, session)
+        console.log(this.sessions)
         sender.reply(respMsg, true)
       } else {
         this._trackMessage = Array.from(new Array(this.config.maxTrackCount), () => '')

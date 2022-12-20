@@ -13,7 +13,7 @@
 
 
 
-<img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/vue?color=brightgreen" alt="dependency-version" />
+<img src="https://img.shields.io/github/repo-size/easydu2002/chat_gpt_oicq?color=green" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/openai?color=black" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/chatgpt" alt="dependency-version" />
 
 
 
@@ -75,7 +75,7 @@
 
 
 ## 👀效果
-![6d61a76fdba6318](https://user-images.githubusercontent.com/59076088/208228741-74084697-8bf2-47bf-a311-88ba271db638.png)]
+![1671258691739](https://user-images.githubusercontent.com/59076088/208228888-12230387-b802-49e0-9872-3b220f4e8ddf.png)
 ![image](https://user-images.githubusercontent.com/59076088/206843285-9fdf53e6-a0c7-4432-89b4-75f56104affc.png)
 ![Screenshot_20221209_221507_com tencent tim](https://user-images.githubusercontent.com/59076088/206724421-b77ba55a-6428-4cd0-932f-22559d5677c1.jpg)
 

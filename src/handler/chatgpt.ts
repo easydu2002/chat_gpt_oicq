@@ -1,4 +1,4 @@
-import { ChatGPTAPI, ChatGPTConversation, getBrowser, getOpenAIAuth } from 'chatgpt'
+import { ChatGPTAPIBrowser, ChatResponse } from 'chatgpt'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
@@ -21,9 +21,9 @@ export class ChatGPTHandler extends BaseMessageHandler {
     browserPath: ''
   }
 
-  _api: ChatGPTAPI
+  _api: ChatGPTAPIBrowser
 
-  _trackSession: ChatGPTConversation
+  _trackSession: ChatResponse
 
   async load (config: ChatGPTConfig) {
     super.load(config)
@@ -33,15 +33,9 @@ export class ChatGPTHandler extends BaseMessageHandler {
 
   async initChatGPT () {
     if (!this.config.enable) return
-    const { email, password, browserPath } = this.config
-    const openAIAuth = await getOpenAIAuth({
-      email,
-      password,
-      browser: await getBrowser({ executablePath: browserPath })
-    })
-    this._api = new ChatGPTAPI({ ...openAIAuth })
-    await this._api.ensureAuth()
-    this._trackSession = this._api.getConversation()
+    const { email, password } = this.config
+    this._api = new ChatGPTAPIBrowser({ email, password })
+    await this._api.initSession()
   }
 
   async reboot () {
@@ -52,8 +46,13 @@ export class ChatGPTHandler extends BaseMessageHandler {
     if (!this.config.enable) return true
 
     try {
-      const response = await this._trackSession.sendMessage(filterTokens(sender.textMessage))
-      sender.reply(response)
+      const response = await this._api.sendMessage(filterTokens(sender.textMessage), {
+        conversationId: this._trackSession?.conversationId,
+        parentMessageId: this._trackSession?.messageId
+      })
+      this._trackSession = response
+
+      sender.reply(this._trackSession.response, true)
     } catch (err) {
       this.messageErrorHandler(sender, err)
       logger.error(err)

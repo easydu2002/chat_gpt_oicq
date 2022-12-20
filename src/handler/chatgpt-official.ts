@@ -44,7 +44,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
    */
   identity = ''
-  sessions = new Map()
+  sessions: Map<string, Session> = new Map()
 
   _openAI: OpenAIApi
 
@@ -78,7 +78,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     }
 
     try {
-      const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
+      const prompt = `${this.identity}\n${session.trackMessage.join('')}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
       const completion = await this._openAI.createCompletion({
         model: this.config.model,
         prompt,

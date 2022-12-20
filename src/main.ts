@@ -2,19 +2,19 @@ import { BaseMessageHandler } from 'src/types'
 import logger from './util/log'
 import { initOicq } from './core/oicq'
 import MessageHandlers from './handler'
-import { loadConfig, validConfigFile, writeConfig } from './util/config'
+import { existsConfig, loadConfig, writeConfig } from './util/config'
 import { config } from './config'
 import { run } from './auto'
 
 /**
- * 读取handler配置模板
+ * 生成handler配置
  */
-function generateHandlerConfig (defaultConfig?: {}) {
+function generateHandlerConfig (merge: {} = {}) {
   const config = {}
   for (let i = 0; i < MessageHandlers.length; i++) {
     if (MessageHandlers[i] instanceof BaseMessageHandler) {
       const tmp = MessageHandlers[i] as BaseMessageHandler
-      config[tmp.name] = { ...tmp.config, ...defaultConfig ? defaultConfig[tmp.name] : {} }
+      config[tmp.name] = { ...tmp.config, ...merge }
     }
   }
   return config
@@ -32,7 +32,7 @@ async function loadHandlerConfig () {
   }
 }
 async function main () {
-  const exist = await validConfigFile(false)
+  const exist = existsConfig()
   if (!exist) {
     await run()
       .then(async (conf) => {

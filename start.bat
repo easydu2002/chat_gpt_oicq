@@ -20,11 +20,9 @@ if not exist %LocalVersionFile% (
 SET /P RemoteVersion=<%RemoteVersionFile%
 SET /p LocalVersion=<%LocalVersionFile%
 
-@REM 处理npm安装 puppeteer 的报错
-SET PUPPETEER_SKIP_DOWNLOAD=true
-
 if %RemoteVersion% NEQ %LocalVersion% ( 
   echo 正在更新依赖，请稍等...
+  echo npm config set puppeteer_download_host=https://npm.taobao.org/mirrors
   npm install && echo %RemoteVersion% > ./version-local && npm run dev
 ) else ( 
   npm run dev

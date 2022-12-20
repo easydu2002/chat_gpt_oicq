@@ -11,7 +11,6 @@ then
 fi
 
 
-export PUPPETEER_SKIP_DOWNLOAD=true
 remoteVersion=`cat version-remote`
 localVersion=`cat version-local`
 
@@ -20,5 +19,6 @@ then
   npm run dev
 else
   echo 正在更新依赖，请稍等...
+  npm config set puppeteer_download_host=https://npm.taobao.org/mirrors
   npm install && echo $remoteVersion > version-local && npm run dev
 fi

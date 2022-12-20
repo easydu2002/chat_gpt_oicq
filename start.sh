@@ -11,7 +11,7 @@ then
 fi
 
 
-export PUPPETEER_SKIP_DOWNLOAD=true
+npm config set puppeteer_download_host=https://npm.taobao.org/mirrors
 remoteVersion=`cat version-remote`
 localVersion=`cat version-local`
 

@@ -41,13 +41,14 @@
   },
   "dependencies": {
     "@types/inquirer": "^9.0.3",
-    "chatgpt": "^2.3.0",
+    "chatgpt": "^3.3.1",
     "dotenv": "^16.0.3",
     "inquirer": "^9.1.4",
     "node-schedule": "^2.1.0",
     "oicq": "^2.3.1",
     "oicq-guild": "^0.1.0",
     "openai": "^3.1.0",
+    "puppeteer": "^19.4.1",
     "winston": "^3.8.2"
   }
 }

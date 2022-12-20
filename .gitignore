@@ -12,3 +12,5 @@ version-local
 package-lock.json
 
 build
+
+docker

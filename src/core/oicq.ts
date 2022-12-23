@@ -61,27 +61,23 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
 }
 
 function doLogin (client: Client) {
-  // 有密码滑块登录（不好用，先搁置着）
-  // if (config.password) {
-  //   client.on('system.login.slider', function (e) {
-  //     console.log('输入ticket：')
-  //     process.stdin.once('data', ticket => this.submitSlider(String(ticket).trim()))
-  //   }).login(config.password)
-  //   client.on('system.login.device', function (e) {
-  //     console.log('e.url', e.url)
-  //   })
-  // } else {
-  client.on('system.login.qrcode', function (e) {
-    // 扫码后按回车登录
-    // process.stdin.once('data', () => {
-    //   this.login()
-    // })
+  
+  client.on('system.login.slider', function (e) {
+    console.log('输入ticket：')
+    process.stdin.once('data', ticket => this.submitSlider(String(ticket).trim()))
+  })
 
-    // 用了inquirer还不能回车了？？参考下yunzai的实现
+  
+  client.on('system.login.device', function (e) {
+    console.log('输入ticket：')
+    client.sendSmsCode()
+    process.stdin.once('data', ticket => this.submitSmsCode(String(ticket).trim()))
+  })
+    
+  client.on('system.login.qrcode', function (e) {
     inquirer.prompt({ type: 'input', message: '回车刷新二维码，等待扫码中...\n', name: 'enter' })
-      .then(async () => {
-        this.login()
-      })
-  }).login()
-  // }
+      .then(() => this.login())
+  })
+  
+  client.login(config.botPassword)
 }

@@ -61,23 +61,23 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
 }
 
 function doLogin (client: Client) {
-  
   client.on('system.login.slider', function (e) {
     console.log('输入ticket：')
     process.stdin.once('data', ticket => this.submitSlider(String(ticket).trim()))
   })
 
-  
   client.on('system.login.device', function (e) {
     console.log('输入ticket：')
     client.sendSmsCode()
     process.stdin.once('data', ticket => this.submitSmsCode(String(ticket).trim()))
   })
-    
+
   client.on('system.login.qrcode', function (e) {
     inquirer.prompt({ type: 'input', message: '回车刷新二维码，等待扫码中...\n', name: 'enter' })
-      .then(() => this.login())
+      .then(async () => {
+        this.login()
+      })
   })
-  
+
   client.login(config.botPassword)
 }

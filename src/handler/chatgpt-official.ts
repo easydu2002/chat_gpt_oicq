@@ -1,4 +1,5 @@
 import { Configuration, OpenAIApi } from 'openai'
+import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
@@ -8,31 +9,7 @@ function messageErrorHandler (sender: Sender, err: any) {
   sender.reply(`发生错误\n${err}`)
 }
 
-interface ChatGPTOfficialConfig {
-
-  enable: boolean
-  key: string
-  model: string
-  identity: []
-  maxTokens: number
-  maxTrackCount: number
-  temperature: number
-}
-
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
-  name = 'officialAPI'
-
-  config: ChatGPTOfficialConfig = {
-
-    enable: true,
-    key: '',
-    model: 'text-davinci-003',
-    identity: [],
-    maxTokens: 256,
-    maxTrackCount: 1,
-    temperature: 0.9
-  }
-
   /**
   * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
   */
@@ -46,17 +23,17 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   _openAI: OpenAIApi
 
   initOpenAI () {
-    if (!this.config.enable) return
+    if (!config.officialAPI.enable) return
 
     const configuration = new Configuration({
-      apiKey: this.config.key
+      apiKey: config.officialAPI.key
     })
     this._openAI = new OpenAIApi(configuration)
   }
 
-  async load (config: ChatGPTOfficialConfig) {
-    super.load(config)
-    this._trackMessage = Array.from(new Array(config.maxTrackCount), () => '')
+  async load () {
+    this._trackMessage = new Array(config.officialAPI.maxTrackCount).fill('')
+    console.log('this._trackMessage', this._trackMessage)
     this.initOpenAI()
     this.identity = this.getIdentity()
   }
@@ -66,15 +43,15 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   }
 
   handle = async (sender: Sender) => {
-    if (!this.config.enable) return true
+    if (!config.officialAPI.enable) return true
 
     try {
       const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
       const completion = await this._openAI.createCompletion({
-        model: this.config.model,
+        model: config.officialAPI.model,
         prompt,
-        temperature: this.config.temperature,
-        max_tokens: this.config.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
+        temperature: config.officialAPI.temperature,
+        max_tokens: config.officialAPI.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
         top_p: 1,
         frequency_penalty: 0.0,
         presence_penalty: 0.6,
@@ -86,7 +63,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
         this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
         sender.reply(respMsg, true)
       } else {
-        this._trackMessage = Array.from(new Array(this.config.maxTrackCount), () => '')
+        this._trackMessage.fill('')
         sender.reply('emmm....', true)
       }
     } catch (err) {
@@ -97,7 +74,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   }
 
   getIdentity () {
-    const identity = this.config.identity
+    const identity = config.officialAPI.identity
 
     if (identity.length === 1) {
       return filterTokens(identity[0])

@@ -1,39 +1,23 @@
 import { ChatGPTAPIBrowser, ChatResponse } from 'chatgpt'
+import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
 
-interface ChatGPTConfig {
-  enable: boolean
-  email: string
-  password: string
-  browserPath: string
-}
-
 export class ChatGPTHandler extends BaseMessageHandler {
-  name = 'api'
-
-  config: ChatGPTConfig = {
-    enable: false,
-    email: '',
-    password: '',
-    browserPath: ''
-  }
-
   _api: ChatGPTAPIBrowser
 
   _trackSession: ChatResponse
 
-  async load (config: ChatGPTConfig) {
-    super.load(config)
-    if (!this.config.enable) return
+  async load () {
+    if (!config.api.enable) return
     await this.initChatGPT()
   }
 
   async initChatGPT () {
-    if (!this.config.enable) return
-    const { email, password } = this.config
+    if (!config.api.enable) return
+    const { email, password } = config.api
     this._api = new ChatGPTAPIBrowser({ email, password })
     await this._api.initSession()
   }
@@ -43,7 +27,7 @@ export class ChatGPTHandler extends BaseMessageHandler {
   }
 
   handle = async (sender: Sender) => {
-    if (!this.config.enable) return true
+    if (!config.api.enable) return true
 
     try {
       const response = await this._api.sendMessage(filterTokens(sender.textMessage), {

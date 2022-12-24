@@ -14,7 +14,7 @@ function generateHandlerConfig (merge: {} = {}) {
   for (let i = 0; i < MessageHandlers.length; i++) {
     if (MessageHandlers[i] instanceof BaseMessageHandler) {
       const tmp = MessageHandlers[i] as BaseMessageHandler
-      config[tmp.name] = { ...tmp.config, ...merge }
+      config[tmp.name] = { ...tmp.config, ...merge[tmp.name] }
     }
   }
   return config

@@ -15,7 +15,7 @@ export class Sender {
 
   constructor (e: MessageEvent) {
     this._eventObject = e
-    this.isAdmin = e.sender.user_id === config.adminQQ
+    this.isAdmin = e.sender.user_id === Number(config.adminQQ)
     this.textMessage = e.message.filter(item => item.type === 'text').map(item => item.text).join().trim()
   }
 

@@ -1,18 +1,18 @@
-import { BaseMessageHandler } from 'src/types'
-import logger from './util/log'
-import { initOicq } from './core/oicq'
-import MessageHandlers from './handler'
-import { existsConfig, loadConfig, writeConfig } from './util/config'
-import { config } from './config'
-import { run } from './auto'
+import { logger } from './util/log.js'
+import { existsConfig, loadConfig, writeConfig } from './util/config.js'
+import { messageHandlers } from './handler/index.js'
+import { BaseMessageHandler } from './handler/base.js'
+import { run } from './auto.js'
+import { config } from './config.js'
+import { initOicq } from './core/oicq.js'
 
 /**
  * 触发handler load钩子
  */
 async function loadHandlerConfig () {
-  for (let i = 0; i < MessageHandlers.length; i++) {
-    if (MessageHandlers[i] instanceof BaseMessageHandler) {
-      await (MessageHandlers[i] as BaseMessageHandler).load()
+  for (let i = 0; i < messageHandlers.length; i++) {
+    if (messageHandlers[i] instanceof BaseMessageHandler) {
+      await (messageHandlers[i]).load()
     }
   }
 }
@@ -33,12 +33,12 @@ async function main () {
         await writeConfig(config)
       })
       .then(async () => await loadHandlerConfig())
-      .then(async () => await initOicq(MessageHandlers))
+      .then(async () => await initOicq(messageHandlers))
       .catch(err => { throw err })
   } else {
     Object.assign(config, await loadConfig())
     await loadHandlerConfig()
-    initOicq(MessageHandlers)
+    initOicq(messageHandlers)
   }
 }
 

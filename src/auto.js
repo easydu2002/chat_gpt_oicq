@@ -1,6 +1,6 @@
 import inquirer from 'inquirer'
 
-export async function run (): Promise<{}> {
+export async function run () {
   // const officialAPIName = (getMessageHandlerByType(ChatGPTOfficialHandler) as ChatGPTOfficialHandler).name
 
   const config = await inquirer.prompt([
@@ -8,7 +8,7 @@ export async function run (): Promise<{}> {
       name: 'adminQQ',
       message: '请输入管理员QQ:',
       type: 'input',
-      validate (input: string) {
+      validate (input) {
         if (!input || isNaN(Number(input))) {
           return '账号格式错误!'
         }
@@ -19,7 +19,7 @@ export async function run (): Promise<{}> {
       name: 'botQQ',
       message: '请输入机器人QQ:',
       type: 'input',
-      validate (input: string) {
+      validate (input) {
         if (!input || isNaN(Number(input))) {
           return '账号格式错误!'
         }
@@ -50,7 +50,7 @@ export async function run (): Promise<{}> {
         name: 'key',
         message: 'key申请地址: https://beta.openai.com/account/api-keys\n请输入API key:',
         type: 'input',
-        validate (input: string) {
+        validate (input) {
           if (!input) {
             return '请输入正确的key!'
           }

@@ -1,6 +1,11 @@
-import commandList from './commands'
+import commandList from './commands/index.js'
 
-export function resolveCommand (content: string) {
+/**
+ *
+ * @param {string} content
+ * @returns
+ */
+export function resolveCommand (content) {
   if (!content.startsWith('/')) return { command: null, params: null }
 
   const [label, ...params] = content.split(' ').filter(item => !!item)

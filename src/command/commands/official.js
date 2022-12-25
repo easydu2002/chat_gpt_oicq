@@ -1,12 +1,17 @@
-import { config } from 'src/config'
-import messageHandlers from 'src/handler'
-import { ChatGPTOfficialHandler } from 'src/handler/chatgpt-official'
-import { writeConfig } from 'src/util/config'
-import { Sender } from '../../model/sender'
-import { BaseCommand } from '../command'
+import { config } from '../../config.js'
+import { messageHandlers } from '../../handler/index.js'
+import { ChatGPTOfficialHandler } from '../../handler/chatgpt-official.js'
+import { writeConfig } from '../../util/config.js'
+import BaseCommand from '../base.js'
 
-async function reloadConfig (key: string, value: any) {
-  const handler = messageHandlers.find(item => item instanceof ChatGPTOfficialHandler) as ChatGPTOfficialHandler
+/**
+ *
+ * @param {string} key
+ * @param {*} value
+ * @returns
+ */
+async function reloadConfig (key, value) {
+  const handler = messageHandlers.find(item => item instanceof ChatGPTOfficialHandler)
   if (!handler) return
   if (!config.officialAPI[key]) {
     throw Error(`没有 officialAPI.[${key}] 配置项`)
@@ -34,7 +39,7 @@ class OfficialCommand extends BaseCommand {
 
   description = '官方api配置'
 
-  async execute (sender: Sender, params: string[]) {
+  async execute (sender, params) {
     switch (params[0]) {
       case 'get':
         sender.reply(JSON.stringify(config.officialAPI, null, 2))

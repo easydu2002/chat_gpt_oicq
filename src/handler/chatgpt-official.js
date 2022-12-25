@@ -1,26 +1,29 @@
 import { Configuration, OpenAIApi } from 'openai'
-import { config } from 'src/config'
-import { Sender } from 'src/model/sender'
-import { BaseMessageHandler } from 'src/types'
-import logger from 'src/util/log'
-import { filterTokens } from 'src/util/message'
+import { config } from '../config.js'
+import { logger } from '../util/log.js'
+import { filterTokens } from '../util/message.js'
+import { BaseMessageHandler } from './base.js'
 
-function messageErrorHandler (sender: Sender, err: any) {
+function messageErrorHandler (sender, err) {
   sender.reply(`发生错误\n${err}`)
 }
 
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
   /**
   * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
+  * @type {string[]}
   */
-  _trackMessage: string[] = []
+  _trackMessage = []
 
   /**
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
    */
   identity = ''
 
-  _openAI: OpenAIApi
+  /**
+   * @type {OpenAIApi}
+   */
+  _openAI
 
   initOpenAI () {
     if (!config.officialAPI.enable) return
@@ -33,7 +36,6 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
 
   async load () {
     this._trackMessage = new Array(config.officialAPI.maxTrackCount).fill('')
-    console.log('this._trackMessage', this._trackMessage)
     this.initOpenAI()
     this.identity = this.getIdentity()
   }
@@ -42,7 +44,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     this.initOpenAI()
   }
 
-  handle = async (sender: Sender) => {
+  handle = async (sender) => {
     if (!config.officialAPI.enable) return true
 
     try {
@@ -88,7 +90,11 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     return ''
   }
 
-  pushTrackMessage (val: string) {
+  /**
+   *
+   * @param {string} val
+   */
+  pushTrackMessage (val) {
     this._trackMessage.push(val)
     this._trackMessage.shift()
   }

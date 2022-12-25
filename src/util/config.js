@@ -1,6 +1,6 @@
 import { existsSync } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
-import { config } from 'src/config'
+import { config } from '../config.js'
 
 const configFile = process.cwd() + '/config.json'
 
@@ -21,7 +21,11 @@ export async function validConfigFile () {
   }
 }
 
-export async function writeConfig (config: object) {
+/**
+ *
+ * @param {{}} config
+ */
+export async function writeConfig (config) {
   const content = JSON.stringify(config, null, 2)
   await writeFile(configFile, content)
   console.log(`config.json 创建成功！${configFile}`)

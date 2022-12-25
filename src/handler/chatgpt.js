@@ -1,14 +1,19 @@
-import { ChatGPTAPIBrowser, ChatResponse } from 'chatgpt'
-import { config } from 'src/config'
-import { Sender } from 'src/model/sender'
-import { BaseMessageHandler } from 'src/types'
-import logger from 'src/util/log'
-import { filterTokens } from 'src/util/message'
+import { ChatGPTAPIBrowser } from 'chatgpt'
+import { config } from '../config.js'
+import { logger } from '../util/log.js'
+import { filterTokens } from '../util/message.js'
+import { BaseMessageHandler } from './base.js'
 
 export class ChatGPTHandler extends BaseMessageHandler {
-  _api: ChatGPTAPIBrowser
+  /**
+   * @type {ChatGPTAPIBrowser}
+   */
+  _api
 
-  _trackSession: ChatResponse
+  /**
+   * @type {import('chatgpt').ChatResponse}
+   */
+  _trackSession
 
   async load () {
     if (!config.api.enable) return
@@ -26,7 +31,7 @@ export class ChatGPTHandler extends BaseMessageHandler {
     await this.initChatGPT()
   }
 
-  handle = async (sender: Sender) => {
+  handle = async (sender) => {
     if (!config.api.enable) return true
 
     try {
@@ -44,7 +49,7 @@ export class ChatGPTHandler extends BaseMessageHandler {
     return false
   }
 
-  messageErrorHandler (sender: Sender, err: any) {
+  messageErrorHandler (sender, err) {
     // if (err instanceof ChatGPTError) {
     if (err.message === 'ChatGPT invalid session token') {
       sender.reply('token 无效')

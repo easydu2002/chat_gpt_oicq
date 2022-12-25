@@ -9,8 +9,9 @@ const replaceMapping = {
 
 /**
  * 消息 tokens优化
+ * @param {string} content
  */
-export function filterTokens (content: string) {
+export function filterTokens (content) {
   // content.replaceAll(/，|。|！/g, ' ')
   let resultMessage = ''
   for (let i = 0; i < content.length; i++) {
@@ -18,7 +19,7 @@ export function filterTokens (content: string) {
       if (content[i] === ' ') continue
     }
     if (replaceMapping[content[i]] !== undefined) {
-      resultMessage += replaceMapping[content[i]] as string
+      resultMessage += replaceMapping[content[i]]
     } else {
       resultMessage += content[i]
     }

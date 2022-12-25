@@ -1,6 +1,10 @@
-import { MessageHandler } from 'src/types'
 
-export const emptyHandler: MessageHandler = function (sender) {
+/**
+ *
+ * @param {Sender} sender
+ * @returns
+ */
+export const emptyHandler = function (sender) {
   if (!sender.textMessage) {
     sender.reply('(●\'◡\'●)', true)
     return false

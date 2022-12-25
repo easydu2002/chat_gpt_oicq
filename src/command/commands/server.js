@@ -1,8 +1,7 @@
-import { initOicq } from 'src/core/oicq'
-import { BaseMessageHandler } from 'src/types'
-import { Sender } from '../../model/sender'
-import { BaseCommand } from '../command'
-import messageHandlers from './../../handler'
+import BaseCommand from '../base.js'
+import { messageHandlers } from '../../handler/index.js'
+import { initOicq } from '../../core/oicq.js'
+import { BaseMessageHandler } from '../../handler/base.js'
 
 class ServerCommand extends BaseCommand {
   label = 'server'
@@ -14,7 +13,7 @@ class ServerCommand extends BaseCommand {
   requiredAdministrator = true
   description = '服务操作相关命令'
 
-  async execute (sender: Sender, params: string[]) {
+  async execute (sender, params) {
     switch (params[0]) {
       case 'reboot':
         sender.reply('重启中, 稍等~')

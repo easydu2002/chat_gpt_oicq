@@ -1,8 +1,11 @@
-import commands from '.'
-import { Sender } from '../../model/sender'
-import { BaseCommand } from '../command'
-
-function buildHelpMessage (isAdmin: boolean) {
+import commands from './index.js'
+import BaseCommand from '../base.js'
+/**
+ *
+ * @param {boolean} isAdmin
+ * @returns
+ */
+function buildHelpMessage (isAdmin) {
   const command = commands.filter(item => {
     const hasPermission = isAdmin ? item.requiredAdministrator : true
     return item.label !== 'help' && hasPermission
@@ -22,7 +25,7 @@ class HelpCommand extends BaseCommand {
   usage = []
   description = '帮助'
   requiredAdministrator = false
-  execute (sender: Sender, params: string[]) {
+  execute (sender, params) {
     const replyMessage = buildHelpMessage(sender.isAdmin)
     sender.reply(replyMessage, true)
   }

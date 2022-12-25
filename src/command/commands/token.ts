@@ -1,7 +1,7 @@
 import { config } from 'src/config'
 import { writeEnv } from 'src/util/env'
 import { Sender } from '../../model/sender'
-import { BaseCommand } from '../command'
+import { BaseCommand } from '../base'
 
 class TokenCommand extends BaseCommand {
   label = 'token'

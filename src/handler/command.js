@@ -1,8 +1,6 @@
+import { resolveCommand } from '../command/index.js'
 
-import { resolveCommand } from 'src/command'
-import { MessageHandler } from 'src/types'
-
-export const commandHandler: MessageHandler = async function (sender) {
+export const commandHandler = async function (sender) {
   const { command, params } = resolveCommand(sender.textMessage)
   if (command) {
     if (command.requiredAdministrator && !sender.isAdmin) {

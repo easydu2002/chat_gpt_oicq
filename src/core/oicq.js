@@ -1,23 +1,34 @@
-import { Client, createClient } from 'oicq'
-import { config } from 'src/config'
-import { Sender } from 'src/model/sender'
-import { BaseMessageHandler, MessageEvent, MessageHandler } from 'src/types'
-import logger from 'src/util/log'
-import { GuildApp } from 'oicq-guild'
 import inquirer from 'inquirer'
+import { createClient } from 'oicq'
+import { GuildApp } from 'oicq-guild'
+import { config } from '../config.js'
+import { BaseMessageHandler } from '../handler/base.js'
+import { Sender } from '../model/sender.js'
+import { logger } from '../util/log.js'
 
-let client: Client
-let messageHandler: Array<MessageHandler | BaseMessageHandler>
+/**
+ * @type {Client}
+ */
+let client
+/**
+ * @type {Array<MessageHandler | BaseMessageHandler>}
+ */
+let messageHandler
 
-async function handleMessage (e: MessageEvent) {
+/**
+ *
+ * @param {MessageEvent} e
+ * @returns
+ */
+async function handleMessage (e) {
   const sender = new Sender(e)
   try {
     for (let i = 0; i < messageHandler.length; i++) {
       let isStop = false
       if (messageHandler[i] instanceof BaseMessageHandler) {
-        isStop = !await (messageHandler[i] as BaseMessageHandler).handle(sender)
+        isStop = !await (messageHandler[i]).handle(sender)
       } else if (typeof messageHandler[i] === 'function') {
-        isStop = !await (messageHandler[i] as MessageHandler)(sender)
+        isStop = !await (messageHandler[i])(sender)
       }
       if (isStop) {
         return
@@ -29,7 +40,12 @@ async function handleMessage (e: MessageEvent) {
   }
 }
 
-export async function initOicq (initMessageHandler?: Array<MessageHandler | BaseMessageHandler>) {
+/**
+ *
+ * @param {Array<MessageHandler | BaseMessageHandler>} [initMessageHandler]
+ * @returns
+ */
+export async function initOicq (initMessageHandler) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
   await client?.logout()
   client = createClient(config.botQQ, {
@@ -60,7 +76,11 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
   return client
 }
 
-function doLogin (client: Client) {
+/**
+ *
+ * @param {Client} client
+ */
+function doLogin (client) {
   client.on('system.login.slider', function (e) {
     inquirer.prompt({ type: 'input', message: '输入ticket：...\n', name: 'ticket' })
       .then(({ ticket }) => this.submitSlider(String(ticket).trim()))

@@ -25,6 +25,11 @@ export async function run (): Promise<{}> {
         }
         return true
       }
+    },
+    {
+      name: 'botPassword',
+      message: '请输入机器人密码，如需扫码可跳过输入(密码登录不稳定，如不行还是扫码吧)',
+      type: 'input'
     }
   ])
 

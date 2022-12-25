@@ -8,12 +8,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx src/main.ts",
     "lint": "eslint . --fix",
+    "patch": "npx patch-package --patch-dir ./.patches",
     "build:win64": "pkg . --t win",
-    "build:t": "pkg --t win test.js"
+    "build:t": "pkg --t win test.js",
+    "build:index": "esbuild src/main.ts --bundle --platform=node --outfile=build/index.cjs"
   },
   "pkg": {
     "assets": [
       "node_modules/**/*"
+    ],
+    "scripts": [
+      "src/**/*.ts"
     ],
     "outputPath": "build",
     "output": "ChatGPTQQ.exe"

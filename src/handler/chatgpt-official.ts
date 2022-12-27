@@ -33,7 +33,6 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
 
   async load () {
     this._trackMessage = new Array(config.officialAPI.maxTrackCount).fill('')
-    console.log('this._trackMessage', this._trackMessage)
     this.initOpenAI()
     this.identity = this.getIdentity()
   }

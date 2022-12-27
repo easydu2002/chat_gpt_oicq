@@ -7,11 +7,13 @@ async function patch () {
   const path = './src/handler/index.ts'
   const handlerContent = (await readFile(path)).toString().replace('new ChatGPTHandler()', '//new ChatGPTHandler()')
   await writeFile(path, handlerContent)
+  console.log('patch...')
 }
 async function unpatch () {
   const path = './src/handler/index.ts'
   const handlerContent = (await readFile(path)).toString().replace('//new ChatGPTHandler()', 'new ChatGPTHandler()')
   await writeFile(path, handlerContent)
+  console.log('unpatch...')
 }
 
 async function build () {
@@ -24,7 +26,8 @@ async function build () {
     minify: true,
     external: [],
     plugins: []
-  }).then(() => {
+  }).then((res) => {
+    console.log('builded app.js..')
     require('pkg').exec('.')
   }).then(() => {
     unpatch()

@@ -5,6 +5,7 @@ import MessageHandlers from './handler'
 import { existsConfig, loadConfig, writeConfig } from './util/config'
 import { config } from './config'
 import { run } from './auto'
+import chalk from 'chalk'
 
 /**
  * 触发handler load钩子
@@ -18,6 +19,9 @@ async function loadHandlerConfig () {
 }
 
 async function main () {
+  console.log(chalk.green('欢迎使用chatgpt_oicq: https://github.com/easydu2002/chat_gpt_oicq'))
+  console.log(chalk.green('如果有用点个star吧 !!!'))
+
   const exist = existsConfig()
   if (!exist) {
     await run()

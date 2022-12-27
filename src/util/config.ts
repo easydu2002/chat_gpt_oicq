@@ -1,6 +1,8 @@
+import logger from 'src/util/log'
 import { existsSync } from 'fs'
 import { readFile, writeFile } from 'fs/promises'
 import { config } from 'src/config'
+import chalk from 'chalk'
 
 const configFile = process.cwd() + '/config.json'
 
@@ -24,5 +26,5 @@ export async function validConfigFile () {
 export async function writeConfig (config: object) {
   const content = JSON.stringify(config, null, 2)
   await writeFile(configFile, content)
-  console.log(`config.json 创建成功！${configFile}`)
+  logger.info(chalk.green(`config.json 创建成功！${configFile}`))
 }

@@ -9,7 +9,8 @@
     "dev": "npx tsx src/main.ts",
     "lint": "eslint . --fix",
     "patch": "npx patch-package --patch-dir ./.patches",
-    "build": "node build.js"
+    "build": "node build.js",
+    "postinstall": "npx patch-package --patch-dir ./.patches"
   },
   "pkg": {
     "assets": [],

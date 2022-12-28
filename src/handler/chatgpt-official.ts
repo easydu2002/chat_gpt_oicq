@@ -5,10 +5,6 @@ import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
 
-function messageErrorHandler (sender: Sender, err: any) {
-  sender.reply(`发生错误\n${err}`)
-}
-
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
   /**
   * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
@@ -57,9 +53,8 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
         stop: [' Human:', ' AI:']
       })
       const respMsg = completion.data.choices[0].text
-      logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
       if (respMsg) {
-      // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${qrespMsg}`
+        logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
         this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
         sender.reply(respMsg, true)
       } else {
@@ -67,8 +62,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
         sender.reply('emmm....', true)
       }
     } catch (err) {
-      messageErrorHandler(sender, err)
-      logger.error(err)
+      this.messageErrorHandler(sender, err)
     }
     return false
   }
@@ -95,5 +89,11 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
 
   get trackMessage () {
     return this._trackMessage.join('')
+  }
+
+  messageErrorHandler (sender: Sender, err: any) {
+    const errMessage = `${err.response?.status} ${err.response?.statusText} ${err.response?.data?.error?.message}` || err
+    sender.reply(`发生错误\n${errMessage}`)
+    logger.error(errMessage)
   }
 }

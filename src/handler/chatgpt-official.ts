@@ -57,8 +57,9 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
         stop: [' Human:', ' AI:']
       })
       const respMsg = completion.data.choices[0].text
+      logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
       if (respMsg) {
-      // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${respMsg}`
+      // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${qrespMsg}`
         this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
         sender.reply(respMsg, true)
       } else {

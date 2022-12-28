@@ -1,4 +1,4 @@
-import { createLogger, format, transports } from 'winston'
+import winston, { createLogger, format, transports } from 'winston'
 
 const { combine, timestamp, label, printf } = format
 
@@ -7,11 +7,18 @@ const logFormat = printf(({ level, message, label, timestamp }) => {
 })
 
 const logger = createLogger({
+  levels: { ...winston.config.npm.levels, notice: 3 },
   transports: [
     new transports.Console(),
     new transports.File({
       filename: 'log/error.log',
       level: 'error',
+      maxsize: 10000,
+      maxFiles: 5
+    }),
+    new transports.File({
+      filename: 'log/notice.log',
+      level: 'notice',
       maxsize: 10000,
       maxFiles: 5
     })

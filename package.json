@@ -14,7 +14,9 @@
   },
   "pkg": {
     "assets": [],
-    "scripts": ["build/app.js"],
+    "scripts": [
+      "build/app.js"
+    ],
     "targets": [
       "win",
       "linux",
@@ -35,7 +37,6 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.11",
-    "@types/node-schedule": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^8.0.1",
@@ -48,10 +49,8 @@
   "dependencies": {
     "chalk": "^5.2.0",
     "chatgpt": "^3.3.1",
-    "dotenv": "^16.0.3",
     "esbuild": "^0.16.10",
     "inquirer": "^9.1.4",
-    "node-schedule": "^2.1.0",
     "oicq": "^2.3.1",
     "oicq-guild": "^0.1.0",
     "openai": "^3.1.0",

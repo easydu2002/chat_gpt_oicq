@@ -28,8 +28,21 @@ export async function run (): Promise<{}> {
     },
     {
       name: 'botPassword',
-      message: '请输入机器人密码，如需扫码可跳过输入(密码登录不稳定，如不行还是扫码吧)',
+      message: '请输入机器人密码，如需扫码可跳过输入',
       type: 'input'
+    },
+    {
+      name: 'oicq.platform',
+      message: '请选择登录协议',
+      type: 'list',
+      choices: [
+        // 1:安卓手机(默认) 2:aPad 3:安卓手表 4:MacOS 5:iPad
+        { name: '安卓手机', value: 1 },
+        { name: 'iPad', value: 5 },
+        { name: 'MacOS', value: 4 },
+        { name: '安卓手表', value: 3 },
+        { name: 'aPad', value: 2 }
+      ]
     }
   ])
 

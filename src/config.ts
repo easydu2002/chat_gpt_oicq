@@ -4,6 +4,9 @@ export const config = {
   adminQQ: 0,
   botQQ: 0,
   botPassword: '',
+  oicq: {
+    platform: 1
+  },
 
   // handler config...
   officialAPI: {

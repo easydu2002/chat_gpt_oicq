@@ -40,7 +40,9 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   handle = async (sender: Sender) => {
     if (!config.officialAPI.enable) return true
 
-    const [Q, A] = config.officialAPI.stop
+    let [Q, A] = config.officialAPI.stop
+    Q = Q ?? 'Humen'
+    A = A ?? 'AI'
 
     try {
       const prompt = `${this.identity}\n${this.trackMessage}\n${Q}: ${filterTokens(sender.textMessage)}\n${A}:`

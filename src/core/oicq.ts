@@ -35,7 +35,7 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
   client = createClient(config.botQQ, {
     log_level: 'warn',
     data_dir: process.cwd() + '/data',
-    platform: config.oicq.platform
+    platform: config.oicq?.platform ?? 1
   })
   client.on('message', async e => {
     // 私信或at回复

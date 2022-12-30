@@ -40,8 +40,10 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   handle = async (sender: Sender) => {
     if (!config.officialAPI.enable) return true
 
+    const [Q, A] = config.officialAPI.stop
+
     try {
-      const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
+      const prompt = `${this.identity}\n${this.trackMessage}\n${Q}: ${filterTokens(sender.textMessage)}\n${A}:`
       const completion = await this._openAI.createCompletion({
         model: config.officialAPI.model,
         prompt,
@@ -50,12 +52,12 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
         top_p: 1,
         frequency_penalty: 0.0,
         presence_penalty: 0.6,
-        stop: [' Human:', ' AI:']
+        stop: [` ${Q}:`, ` ${A}:`]
       })
       const respMsg = completion.data.choices[0].text
       if (respMsg) {
         logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
-        this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
+        this.pushTrackMessage(`\n${Q}:${sender.textMessage}\n${A}:${respMsg}`)
         sender.reply(respMsg, true)
       } else {
         this._trackMessage.fill('')

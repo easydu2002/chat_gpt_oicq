@@ -14,7 +14,8 @@ export const config = {
     identity: [],
     maxTokens: 256,
     maxTrackCount: 1,
-    temperature: 0.9
+    temperature: 0.9,
+    stop: ['Humen', 'AI']
   },
   api: {
 

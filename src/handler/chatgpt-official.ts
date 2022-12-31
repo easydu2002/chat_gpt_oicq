@@ -40,7 +40,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   handle = async (sender: Sender) => {
     if (!config.officialAPI.enable) return true
 
-    let [Q, A] = config.officialAPI.stop
+    let [Q, A] = config.officialAPI.stop ?? []
     Q = Q ?? 'Humen'
     A = A ?? 'AI'
 
@@ -72,13 +72,13 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   }
 
   getIdentity () {
-    const identity = config.officialAPI.identity
+    const identity = [...config.officialAPI.identity]
 
     let result = ''
     if (identity.length % 2 !== 0) {
       result = filterTokens(`${identity.shift()}\n`)
     }
-    for (let i = 1; i < identity.length; i++) {
+    for (let i = 1; i < identity.length; i += 2) {
       result += `\nHuman:${filterTokens(identity[i - 1])}\nAI:${filterTokens(identity[i])}`
     }
     return result

@@ -25,8 +25,8 @@ class OfficialCommand extends BaseCommand {
     'maxTrackCount [count] // 设置会话跟踪上限',
     'identity [identity] // 设置人格（使用==连接多个）',
     'maxTokens [identity] // 设置回复消息占用token',
-    'maxTrackCount [identity] // 设置人格（使用==连接多个）',
-    'temperature [identity] // 设置人格（使用==连接多个）'
+    'maxTrackCount [identity] // 设置最大记忆对话次数',
+    'temperature [identity] // 设置回答问题的概率系数 0-1'
     // 'prop [key] [value] // 设置配置项'
   ]
 

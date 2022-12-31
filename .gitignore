@@ -1,2 +1,15 @@
 node_modules
 .env
+
+src/data/
+data
+
+log
+
+config.json
+
+version-local
+
+build
+
+docker

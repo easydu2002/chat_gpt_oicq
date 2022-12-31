@@ -17,11 +17,11 @@
 
 
 
-
 ## ✨当前功能
 
+- 一键启动，易部署
 - 支持私聊、群聊、频道
-- 友好的配置项，自定义人格
+- ~~友好的~~配置项，自定义人格
 - 命令系统
 - ~~三方API（免费）~~
 
@@ -31,46 +31,8 @@
 
 > 注意: 扫码登录需要在局域网环境中（比如同一个热点），如果需要上云先在局域网登录，然后copy项目根目录生成的data目录即可
 
-1. 安装 [Node.js](https://nodejs.org/en/) （版本需要 > 18）
-
-2. 下载项目 `git clone https://github.com/easydu2002/chat_gpt_oicq.git`
-
-3. 进入项目目录 `cd chat_gpt_oicq`
-
-4.  windows运行 `start.bat`，linux运行 `start.sh`
-
-5. 填写相应的信息，扫码登录即可，上线后将会收到机器人发来的已上线~ 
-
-   
-
-## ⌨️常用命令
-
-- /help 查看帮助
-- /token setkey 设置官方key
-
-
-
-
-## ❌常见问题排查
-
-1. **[启动错误]**  ChatGPT invalid session token
-
-   .env 文件没有设置token
-
-
-2. **[启动错误]** ChatGPT failed to refresh auth token. Error: Unauthorized
-
-   .env 的 token 不对 
-
-3. **[启动错误|运行错误]** ChatGPT failed to refresh auth token. Error: session token may have expired
-
-   启动时出现: .env 配置正确的token
-
-   运行时出现: 使用 `/token set 新token` 即可
-
-4. **[运行错误]**  ChatGPT failed to refresh auth token. TypeError: fetch failed
-
-   网络波动，偶尔会有这么一下，不影响
+1. 前往  [releases ](https://github.com/easydu2002/chat_gpt_oicq/releases)下载对应平台的可执行文件，
+2. 运行即可 
 
 
 

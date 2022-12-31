@@ -38,7 +38,6 @@
     "@types/inquirer": "^9.0.3",
     "@types/node": "^18.11.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^8.0.1",
     "eslint-config-standard-with-typescript": "^23.0.0",
     "eslint-plugin-import": "^2.25.2",

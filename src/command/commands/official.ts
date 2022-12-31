@@ -24,9 +24,10 @@ class OfficialCommand extends BaseCommand {
     'model [model] // 设置 model',
     'maxTrackCount [count] // 设置会话跟踪上限',
     'identity [identity] // 设置人格（使用==连接多个）',
-    'maxTokens [identity] // 设置回复消息占用token',
-    'maxTrackCount [identity] // 设置最大记忆对话次数',
-    'temperature [identity] // 设置回答问题的概率系数 0-1'
+    'maxTokens [n] // 设置回复消息占用token',
+    'maxTrackCount [n] // 设置最大记忆对话次数',
+    'temperature [0-1] // 设置回答问题的概率系数 0-1',
+    'stop [Q, A] // 设置问答名称，使用==连接 Humen==AI'
     // 'prop [key] [value] // 设置配置项'
   ]
 
@@ -40,13 +41,15 @@ class OfficialCommand extends BaseCommand {
         sender.reply(JSON.stringify(config.officialAPI, null, 2))
         break
       case 'key':
+      case 'stop':
       case 'model':
       case 'identity':
       case 'maxTokens':
       case 'temperature':
       case 'maxTrackCount':
-        if (params[0] === 'identity') {
-          await reloadConfig(params[0], params[1].split('=='))
+        if (params[0] === 'identity' ||
+          params[0] === 'stop') {
+          await reloadConfig(params[0], params[1]?.split('==') ?? [])
         } else {
           await reloadConfig(params[0], params[1])
         }

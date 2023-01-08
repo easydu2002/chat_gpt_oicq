@@ -4,6 +4,8 @@ import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
+import { GroupMessage } from 'oicq'
+import { Session } from '../util/session'
 
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
   /**
@@ -15,6 +17,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
    */
   identity = ''
+  sessions: Map<string, Session> = new Map()
 
   _openAI: OpenAIApi
 
@@ -44,8 +47,15 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     Q = Q ?? 'Human'
     A = A ?? 'AI'
 
+    const id = sender._eventObject instanceof GroupMessage ? sender._eventObject.group_id : sender._eventObject.sender.user_id
+    let session = this.sessions.get(id)
+    if (typeof session === 'undefined' || (new Date().getTime() - session.last_time.getTime()) > 1000 * 60 * 5) {
+      session = new Session(Array.from(new Array(config.officialAPI.maxTrackCount), () => ''), new Date())
+      console.log(`新建session:${id}`)
+    }
+
     try {
-      const prompt = `${this.identity}\n${this.trackMessage}\n${Q}: ${filterTokens(sender.textMessage)}\n${A}:`
+      const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
       const completion = await this._openAI.createCompletion({
         model: config.officialAPI.model,
         prompt,
@@ -58,8 +68,8 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
       })
       const respMsg = completion.data.choices[0].text
       if (respMsg) {
-        logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
-        this.pushTrackMessage(`\n${Q}:${sender.textMessage}\n${A}:${respMsg}`)
+      // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${respMsg}`
+        this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
         sender.reply(respMsg, true)
       } else {
         this._trackMessage.fill('')

@@ -5,15 +5,13 @@ import { writeConfig } from 'src/util/config'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
 
-async function reloadConfig (key: string, value: any) {
+async function reloadConfig (sender: Sender, key: string, value: any) {
   const handler = messageHandlers.find(item => item instanceof ChatGPTOfficialHandler) as ChatGPTOfficialHandler
   if (!handler) return
-  if (!config.officialAPI[key]) {
-    throw Error(`没有 officialAPI.[${key}] 配置项`)
-  }
   config.officialAPI[key] = value
   handler.load()
   await writeConfig(config)
+  sender.reply(`已更新officialAPI.${key}为 ${value}`)
 }
 
 class OfficialCommand extends BaseCommand {
@@ -27,7 +25,7 @@ class OfficialCommand extends BaseCommand {
     'maxTokens [n] // 设置回复消息占用token',
     'maxTrackCount [n] // 设置最大记忆对话次数',
     'temperature [0-1] // 设置回答问题的概率系数 0-1',
-    'stop [Q, A] // 设置问答名称，使用==连接 Humen==AI'
+    'name [Q] [A] // 设置问答名称'
     // 'prop [key] [value] // 设置配置项'
   ]
 
@@ -35,26 +33,61 @@ class OfficialCommand extends BaseCommand {
 
   description = '官方api配置'
 
+  getUsageByProp (prop: string) {
+    return `用法: ${this.usage.find(item => item.startsWith(prop))}`
+  }
+
   async execute (sender: Sender, params: string[]) {
-    switch (params[0]) {
+    const [prop, value] = params
+
+    switch (prop) {
       case 'get':
         sender.reply(JSON.stringify(config.officialAPI, null, 2))
         break
       case 'key':
-      case 'stop':
-      case 'model':
-      case 'identity':
-      case 'maxTokens':
-      case 'temperature':
-      case 'maxTrackCount':
-        if (params[0] === 'identity' ||
-          params[0] === 'stop') {
-          await reloadConfig(params[0], params[1]?.split('==') ?? [])
-        } else {
-          await reloadConfig(params[0], params[1])
-        }
-        sender.reply(`${params[0]}重置成功!`)
+        if (!value) return sender.reply(this.getUsageByProp(prop), true)
+        reloadConfig(sender, prop, value)
         break
+      case 'name': {
+        const [prop, QName, AName] = params
+        if (!QName) return sender.reply(this.getUsageByProp(prop), true)
+        reloadConfig(sender, prop, [QName || config.officialAPI.name[0], AName || config.officialAPI.name[1]])
+        break
+      }
+      case 'model':
+        if (!value) return sender.reply(this.getUsageByProp(prop), true)
+        reloadConfig(sender, prop, value)
+        break
+      case 'identity':
+        await reloadConfig(sender, prop, value?.split('==') ?? [])
+        break
+      case 'maxTokens': {
+        if (!value) return sender.reply(this.getUsageByProp(prop), true)
+        const maxTokens = Number(value)
+        if (isNaN(maxTokens) || maxTokens < 0) {
+          return sender.reply(`maxTokens 必须为不小于0的数字 当前设置为: ${value}`)
+        }
+        reloadConfig(sender, prop, maxTokens)
+        break
+      }
+      case 'temperature': {
+        if (!value) return sender.reply(this.getUsageByProp(prop), true)
+        const temperature = Number(value)
+        if (!value || isNaN(temperature) || temperature < 0 || temperature > 1) {
+          return sender.reply(`temperature 取值范围为: 0-1 当前设置为: ${value}`)
+        }
+        reloadConfig(sender, prop, temperature)
+        break
+      }
+      case 'maxTrackCount': {
+        if (!value) return sender.reply(this.getUsageByProp(prop), true)
+        const count = Number(value)
+        if (isNaN(count) || count < 0) {
+          return sender.reply(`maxTrackCount 必须为不小于0的数字 当前设置为: ${value}`)
+        }
+        reloadConfig(sender, prop, count)
+        break
+      }
       default:
         sender.reply(this.helpDoc, true)
     }

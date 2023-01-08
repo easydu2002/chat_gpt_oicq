@@ -40,8 +40,8 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   handle = async (sender: Sender) => {
     if (!config.officialAPI.enable) return true
 
-    let [Q, A] = config.officialAPI.stop ?? []
-    Q = Q ?? 'Humen'
+    let [Q, A] = config.officialAPI.name ?? config.officialAPI.stop ?? []
+    Q = Q ?? 'Human'
     A = A ?? 'AI'
 
     try {

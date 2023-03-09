@@ -104,7 +104,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   }
 
   messageErrorHandler (sender: Sender, err: any) {
-    const errMessage = `${err.response?.status} ${err.response?.statusText} ${err.response?.data?.error?.message}` || err
+    const errMessage = `${err.response?.status ?? ''} ${err.response?.statusText ?? ''} ${err.response?.data?.error?.message ?? ''}`.trim() || err
     sender.reply(`发生错误\n${errMessage}`)
     logger.error(errMessage)
   }

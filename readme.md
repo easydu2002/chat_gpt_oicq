@@ -7,8 +7,9 @@
 
 详细指南另见 [Wiki~~](https://github.com/easydu2002/chat_gpt_oicq/wiki)
 
-
 <img src="https://img.shields.io/github/repo-size/easydu2002/chat_gpt_oicq?color=green" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/openai?color=black" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/chatgpt" alt="dependency-version" />
+
+欢迎加入交流Q群: **212908713**
 
 
 

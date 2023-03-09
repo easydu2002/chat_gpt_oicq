@@ -7,8 +7,9 @@
 
 详细指南另见 [Wiki~~](https://github.com/easydu2002/chat_gpt_oicq/wiki)
 
-
 <img src="https://img.shields.io/github/repo-size/easydu2002/chat_gpt_oicq?color=green" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/openai?color=black" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/oicq" alt="dependency-version" /> <img src="https://img.shields.io/github/package-json/dependency-version/easydu2002/chat_gpt_oicq/chatgpt" alt="dependency-version" />
+
+欢迎加入交流Q群: **212908713**
 
 
 
@@ -29,6 +30,30 @@
 3. 聊天时，私聊会直接回答，群聊需要at机器人。
 
 其他详细过程请参照Wiki中的 [入门指南](https://github.com/easydu2002/chat_gpt_oicq/wiki/%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97)。
+
+
+
+# ⌨️Chat 模型配置
+
+> 针对聊天进行了优化，成本仅为 `text-davinci-003`的 1/10
+
+1. **config.json**
+   proxy 为代理的配置，部分地区访问不了openai的话需要配置该项
+
+   ```json
+   {
+       
+     "proxy": {
+       "host": "127.0.0.1",
+       "port": 7890
+     },
+     "officialAPI": {
+       "enable": true,
+       "enableChatGPT": true,
+       "model": "gpt-3.5-turbo",
+     }
+   }
+   ```
 
 ## ⚙快速设置
 

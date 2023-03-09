@@ -1,20 +1,18 @@
-import { Configuration, OpenAIApi } from 'openai'
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai'
 import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
 import logger from 'src/util/log'
 import { filterTokens } from 'src/util/message'
+import { GroupMessage } from 'oicq'
+import { Session } from '../util/session'
 
 export class ChatGPTOfficialHandler extends BaseMessageHandler {
-  /**
-  * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
-  */
-  _trackMessage: string[] = []
-
   /**
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
    */
   identity = ''
+  sessions: Map<string, Session> = new Map()
 
   _openAI: OpenAIApi
 
@@ -28,7 +26,6 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   }
 
   async load () {
-    this._trackMessage = new Array(config.officialAPI.maxTrackCount).fill('')
     this.initOpenAI()
     this.identity = this.getIdentity()
   }
@@ -44,25 +41,60 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     Q = Q ?? 'Human'
     A = A ?? 'AI'
 
+    const id = sender._eventObject instanceof GroupMessage ? sender._eventObject.group_id : sender._eventObject.sender.user_id
+    let session = this.sessions.get(id)
+    if (typeof session === 'undefined' || (new Date().getTime() - session.last_time.getTime()) > 1000 * 60 * 5) {
+      this.sessions.set(id, (session = new Session([], new Date())))
+      console.log(`新建session:${id}`)
+    }
+    const trackMessage = session.trackMessage
+
     try {
-      const prompt = `${this.identity}\n${this.trackMessage}\n${Q}: ${filterTokens(sender.textMessage)}\n${A}:`
-      const completion = await this._openAI.createCompletion({
-        model: config.officialAPI.model,
-        prompt,
-        temperature: config.officialAPI.temperature,
-        max_tokens: config.officialAPI.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
-        top_p: 1,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.6,
-        stop: [` ${Q}:`, ` ${A}:`]
-      })
-      const respMsg = completion.data.choices[0].text
+      let respMsg: string | undefined
+
+      if (!config.officialAPI.enableChatGPT) {
+        const history = trackMessage.length ? trackMessage.map(item => `\n${Q}:${item[0]}\n${A}:${item[1]}`).join('') : ''
+        logger.info(`${id} gpt ${config.officialAPI.model} history: ${history}`)
+        const prompt = `${this.identity}\n${history}\n${Q}: ${filterTokens(sender.textMessage)}\n${A}:`
+        const completion = await this._openAI.createCompletion({
+          model: config.officialAPI.model,
+          prompt,
+          temperature: config.officialAPI.temperature,
+          max_tokens: config.officialAPI.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
+          top_p: 1,
+          frequency_penalty: 0.0,
+          presence_penalty: 0.6,
+          stop: [` ${Q}:`, ` ${A}:`]
+        }, this.axiosConfig())
+        respMsg = completion.data.choices[0].text
+      } else {
+        const history: ChatCompletionRequestMessage[] =
+        trackMessage
+          .map(item => [{ role: ChatCompletionRequestMessageRoleEnum.User, content: item[0] }, { role: ChatCompletionRequestMessageRoleEnum.Assistant, content: item[1] }])
+          .flat()
+        logger.info(`${id} chatgpt ${config.officialAPI.model} history: ${history}`)
+        const messages = [
+          ...history,
+          { role: 'user', content: filterTokens(sender.textMessage) }
+        ]
+        if (this.identity) messages.unshift({ role: 'system', content: filterTokens(this.identity) })
+
+        const completion = await this._openAI.createChatCompletion({
+          model: config.officialAPI.model,
+          messages: [
+            { role: 'system', content: this.identity },
+            ...history,
+            { role: 'user', content: filterTokens(sender.textMessage) }
+          ],
+          max_tokens: config.officialAPI.maxTokens,
+          temperature: config.officialAPI.temperature
+        }, this.axiosConfig())
+        respMsg = completion.data.choices[0].message?.content
+      }
       if (respMsg) {
-        logger.notice(`发送QQ: ${sender.userID} prompt_tokens: ${completion.data.usage?.prompt_tokens} completion_tokens: ${completion.data.usage?.completion_tokens}`)
-        this.pushTrackMessage(`\n${Q}:${sender.textMessage}\n${A}:${respMsg}`)
+        session.pushTrackMessage(sender.textMessage, respMsg)
         sender.reply(respMsg, true)
       } else {
-        this._trackMessage.fill('')
         sender.reply('emmm....', true)
       }
     } catch (err) {
@@ -84,17 +116,17 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     return result
   }
 
-  pushTrackMessage (val: string) {
-    this._trackMessage.push(val)
-    this._trackMessage.shift()
-  }
-
-  get trackMessage () {
-    return this._trackMessage.join('')
+  axiosConfig (): any { // AxiosRequestConfig
+    return {
+      proxy: {
+        host: config.proxy?.host,
+        port: config.proxy?.port
+      }
+    }
   }
 
   messageErrorHandler (sender: Sender, err: any) {
-    const errMessage = `${err.response?.status} ${err.response?.statusText} ${err.response?.data?.error?.message}` || err
+    const errMessage = `${err.response?.status ?? ''} ${err.response?.statusText ?? ''} ${err.response?.data?.error?.message ?? ''}`.trim() || err
     sender.reply(`发生错误\n${errMessage}`)
     logger.error(errMessage)
   }

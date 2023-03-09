@@ -52,7 +52,7 @@
     "inquirer": "^9.1.4",
     "oicq": "^2.3.1",
     "oicq-guild": "^0.1.0",
-    "openai": "^3.1.0",
+    "openai": "^3.2.1",
     "pkg": "^5.8.0",
     "puppeteer": "^19.4.1",
     "winston": "^3.8.2"

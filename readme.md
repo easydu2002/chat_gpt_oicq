@@ -30,6 +30,30 @@
 
 其他详细过程请参照Wiki中的 [入门指南](https://github.com/easydu2002/chat_gpt_oicq/wiki/%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97)。
 
+
+
+# ⌨️Chat 模型配置
+
+> 针对聊天进行了优化，成本仅为 `text-davinci-003`的 1/10
+
+1. **config.json**
+   proxy 为代理的配置，部分地区访问不了openai的话需要配置该项
+
+   ```json
+   {
+       
+     "proxy": {
+       "host": "127.0.0.1",
+       "port": 7890
+     },
+     "officialAPI": {
+       "enable": true,
+       "enableChatGPT": true,
+       "model": "gpt-3.5-turbo",
+     }
+   }
+   ```
+
 ## ⚙快速设置
 
 1. 如何更改部分设置？<br>

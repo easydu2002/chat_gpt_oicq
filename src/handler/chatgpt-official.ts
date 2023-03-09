@@ -119,8 +119,8 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   axiosConfig (): any { // AxiosRequestConfig
     return {
       proxy: {
-        host: config.proxy.host,
-        port: config.proxy.port
+        host: config.proxy?.host,
+        port: config.proxy?.port
       }
     }
   }

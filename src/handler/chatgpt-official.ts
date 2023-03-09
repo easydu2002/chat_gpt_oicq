@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai'
+import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, OpenAIApi } from 'openai'
 import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler } from 'src/types'
@@ -11,7 +11,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
   /**
   * 记录上次的对话信息 参考https://beta.openai.com/playground/p/default-chat?model=text-davinci-003
   */
-  _trackMessage: string[] = []
+  _trackMessage: Array<[string, string]> = []
 
   /**
    * 身份或提示 https://beta.openai.com/docs/guides/completion/conversation
@@ -55,24 +55,46 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     }
 
     try {
-      const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
-      const completion = await this._openAI.createCompletion({
-        model: config.officialAPI.model,
-        prompt,
-        temperature: config.officialAPI.temperature,
-        max_tokens: config.officialAPI.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
-        top_p: 1,
-        frequency_penalty: 0.0,
-        presence_penalty: 0.6,
-        stop: [` ${Q}:`, ` ${A}:`]
-      })
-      const respMsg = completion.data.choices[0].text
+      let respMsg: string | undefined
+
+      if (!config.officialAPI.enableChatGPT) {
+        const history = this._trackMessage.map(item => `\nHuman:${item[0]}\nAI:${item[1]}`).join('')
+        logger.info(`${id} gpt ${config.officialAPI.model} history: ${history}`)
+        const prompt = `${this.identity}\n${this.trackMessage}\nHuman: ${filterTokens(sender.textMessage)}\nAI:`
+        const completion = await this._openAI.createCompletion({
+          model: config.officialAPI.model,
+          prompt,
+          temperature: config.officialAPI.temperature,
+          max_tokens: config.officialAPI.maxTokens, // https://beta.openai.com/docs/guides/completion/best-practices
+          top_p: 1,
+          frequency_penalty: 0.0,
+          presence_penalty: 0.6,
+          stop: [` ${Q}:`, ` ${A}:`]
+        })
+        respMsg = completion.data.choices[0].text
+      } else {
+        const history: ChatCompletionRequestMessage[] =
+          this._trackMessage
+            .map(item => [{ role: ChatCompletionRequestMessageRoleEnum.User, content: item[0] }, { role: ChatCompletionRequestMessageRoleEnum.Assistant, content: item[1] }])
+            .flat()
+        logger.info(`${id} chatgpt ${config.officialAPI.model} history: ${history}`)
+        const completion = await this._openAI.createChatCompletion({
+          model: config.officialAPI.model,
+          messages: [
+            { role: 'system', content: this.identity },
+            ...history,
+            { role: 'user', content: filterTokens(sender.textMessage) }
+          ],
+          max_tokens: config.officialAPI.maxTokens,
+          temperature: config.officialAPI.temperature
+        })
+        respMsg = completion.data.choices[0].message?.content
+      }
       if (respMsg) {
-      // trackMessage = status === 'stop' ? '' : `\nHuman:${respMsg}\nAI:${respMsg}`
-        this.pushTrackMessage(`\nHuman:${sender.textMessage}\nAI:${respMsg}`)
+        this.pushTrackMessage(sender.textMessage, respMsg)
         sender.reply(respMsg, true)
       } else {
-        this._trackMessage.fill('')
+        this._trackMessage.fill(['', ''])
         sender.reply('emmm....', true)
       }
     } catch (err) {
@@ -94,8 +116,8 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
     return result
   }
 
-  pushTrackMessage (val: string) {
-    this._trackMessage.push(val)
+  pushTrackMessage (q: string, a: string) {
+    this._trackMessage.push([q, a])
     this._trackMessage.shift()
   }
 

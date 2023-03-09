@@ -12,6 +12,7 @@ export const config = {
   officialAPI: {
 
     enable: true,
+    enableChatGPT: true,
     key: '',
     model: 'text-davinci-003',
     identity: [],

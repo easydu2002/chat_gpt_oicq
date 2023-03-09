@@ -8,13 +8,19 @@ export const config = {
     platform: 1
   },
 
+  // proxy
+  proxy: {
+    host: '',
+    port: ''
+  },
+
   // handler config...
   officialAPI: {
 
     enable: true,
     enableChatGPT: true,
     key: '',
-    model: 'text-davinci-003',
+    model: 'gpt-3.5-turbo',
     identity: [],
     maxTokens: 256,
     maxTrackCount: 1,

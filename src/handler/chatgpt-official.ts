@@ -65,7 +65,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
           frequency_penalty: 0.0,
           presence_penalty: 0.6,
           stop: [` ${Q}:`, ` ${A}:`]
-        })
+        }, this.axiosConfig())
         respMsg = completion.data.choices[0].text
       } else {
         const history: ChatCompletionRequestMessage[] =
@@ -88,7 +88,7 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
           ],
           max_tokens: config.officialAPI.maxTokens,
           temperature: config.officialAPI.temperature
-        })
+        }, this.axiosConfig())
         respMsg = completion.data.choices[0].message?.content
       }
       if (respMsg) {
@@ -114,6 +114,15 @@ export class ChatGPTOfficialHandler extends BaseMessageHandler {
       result += `\nHuman:${filterTokens(identity[i - 1])}\nAI:${filterTokens(identity[i])}`
     }
     return result
+  }
+
+  axiosConfig (): any { // AxiosRequestConfig
+    return {
+      proxy: {
+        host: config.proxy.host,
+        port: config.proxy.port
+      }
+    }
   }
 
   messageErrorHandler (sender: Sender, err: any) {

@@ -10,6 +10,7 @@ export const config = {
 
   // proxy
   proxy: {
+    enable: false,
     host: '',
     port: ''
   },

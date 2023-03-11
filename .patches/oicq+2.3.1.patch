@@ -1,86 +1,138 @@
 diff --git a/node_modules/oicq/lib/core/device.js b/node_modules/oicq/lib/core/device.js
-index ffadc63..57da54d 100644
+index ffadc63..285b020 100644
 --- a/node_modules/oicq/lib/core/device.js
 +++ b/node_modules/oicq/lib/core/device.js
-@@ -34,7 +34,7 @@ function generateImei(uin) {
-     return imei + calcSP(imei);
+@@ -35,24 +35,28 @@ function generateImei(uin) {
  }
  /** 生成短设备信息 */
--function generateShortDevice(uin) {
-+function generateShortDeviceDeprecated(uin) {
-     const hash = (0, constants_1.md5)(String(uin));
-     const hex = hash.toString("hex");
+ function generateShortDevice(uin) {
+-    const hash = (0, constants_1.md5)(String(uin));
+-    const hex = hash.toString("hex");
++    const randstr = (length, num = false) => {
++		let result = ''
++		const map = num ? '0123456789' : '0123456789abcdef'
++		for (let i = length; i > 0; --i) result += map[Math.floor(Math.random() * map.length)]
++		return result
++	}
      return {
-@@ -56,6 +56,45 @@ function generateShortDevice(uin) {
+         "--begin--": "该设备由账号作为seed固定生成，账号不变则永远相同",
+-        product: "MRS4S",
+-        device: "HIM188MOE",
+-        board: "MIRAI-YYDS",
+-        brand: "OICQX",
+-        model: "Konata 2020",
+-        wifi_ssid: `TP-LINK-${uin.toString(16)}`,
+-        bootloader: "U-boot",
+-        android_id: `OICQX.${hash.readUInt16BE()}${hash[2]}.${hash[3]}${String(uin)[0]}`,
+-        boot_id: hex.substr(0, 8) + "-" + hex.substr(8, 4) + "-" + hex.substr(12, 4) + "-" + hex.substr(16, 4) + "-" + hex.substr(20),
+-        proc_version: `Linux version 4.19.71-${hash.readUInt16BE(4)} (konata@takayama.github.com)`,
+-        mac_address: `00:50:${hash[6].toString(16).toUpperCase()}:${hash[7].toString(16).toUpperCase()}:${hash[8].toString(16).toUpperCase()}:${hash[9].toString(16).toUpperCase()}`,
+-        ip_address: `10.0.${hash[10]}.${hash[11]}`,
+-        imei: generateImei(uin),
+-        incremental: hash.readUInt32BE(12),
++		product:      `ILPP-${randstr(5).toUpperCase()}`,
++		device:       `${randstr(5).toUpperCase()}`,
++		board:        `${randstr(5).toUpperCase()}`,
++		brand:        `${randstr(4).toUpperCase()}`,
++		model:        `ILPP ${randstr(4).toUpperCase()}`,
++		wifi_ssid:    `HUAWEI-${randstr(7)}`,
++		bootloader:   `U-boot`,
++		android_id:   `IL.${randstr(7, true)}.${randstr(4, true)}`,
++		boot_id:      `${randstr(8)}-${randstr(4)}-${randstr(4)}-${randstr(4)}-${randstr(12,)}`,
++		proc_version: `Linux version 5.10.101-android12-${randstr(8)}`,
++		mac_address:  `2D:${randstr(2).toUpperCase()}:${randstr(2).toUpperCase()}:${randstr(2,).toUpperCase()}:${randstr(2).toUpperCase()}:${randstr(2).toUpperCase()}`,
++		ip_address:   `192.168.${randstr(2, true)}.${randstr(2, true)}`,
++		imei:         `86${randstr(13, true)}`,
++		incremental:  `${randstr(10).toUpperCase()}`,
          "--end--": "修改后可能需要重新验证设备",
      };
  }
-+/** 生成随机设备信息 */
-+function generateShortDevice(uin) {
-+    function randomString(length) {
-+        const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-+        let result = "";
-+
-+        for (let i = 0; i < length; i++) {
-+            result += pool.charAt(Math.floor(Math.random() * pool.length));
-+        }
-+
-+        return result;
-+    }
-+
-+    function randomInt(boundary) {
-+      return Math.floor(Math.random() * boundary);
-+    }
-+
-+    return {
-+        "--begin--": "该设备由账号作为seed固定生成，账号不变则永远相同",
-+        "--notice--": "The code that generated this file was patched by Adachi-BOT",
-+        product: `ILPP-${randomString(5).toUpperCase()}`,
-+        device: `${randomString(5).toUpperCase()}`,
-+        board: `${randomString(5).toUpperCase()}`,
-+        brand: `${randomString(4).toUpperCase()}`,
-+        model: `ILPP ${randomString(4).toUpperCase()}`,
-+        wifi_ssid: `HUAWEI-${randomString(7)}`,
-+        bootloader: "U-boot",
-+        android_id: `IL.${randomInt(10000000)}.${randomInt(10000)}`,
-+        boot_id: `${randomString(8)}-${randomString(4)}-${randomString(4)}-${randomString(4)}-${randomString(12)}`,
-+        proc_version: `Linux version 5.10.101-android12-${randomString(8)}`,
-+        mac_address: `2D:${randomString(2).toUpperCase()}:${randomString(2).toUpperCase()}:${randomString(
-+            2
-+        ).toUpperCase()}:${randomString(2).toUpperCase()}:${randomString(2).toUpperCase()}`,
-+        ip_address: `192.168.${randomInt(255)}.${randomInt(255)}`,
-+        imei: `86${randomInt(10000000000000)}`,
-+        incremental: `${randomString(10).toUpperCase()}`,
-+        "--end--": "修改后可能需要重新验证设备。",
-+    };
-+}
- exports.generateShortDevice = generateShortDevice;
- /** 生成完整设备信息 */
- function generateFullDevice(d) {
-@@ -104,16 +143,19 @@ var Platform;
-     Platform[Platform["iPad"] = 5] = "iPad";
+@@ -105,45 +109,45 @@ var Platform;
  })(Platform = exports.Platform || (exports.Platform = {}));
  const mobile = {
-+    // XXX Here update device informations based on mirai
-+    // https://github.com/mamoe/mirai/blob/c9d1d386b16e886ad63eb51e6baf7270fcf2fa7b/mirai-core/src/commonMain/kotlin/utils/MiraiProtocolInternal.kt
      id: "com.tencent.mobileqq",
 -    name: "A8.8.80.7400",
 -    version: "8.8.80.7400",
 -    ver: "8.8.80",
 -    sign: Buffer.from([166, 183, 69, 191, 36, 162, 194, 119, 82, 119, 22, 246, 243, 110, 182, 141]),
-+    name: "A8.9.15.9425",
-+    version: "8.9.15.9425",
-+    ver: "8.9.15",
-+    sign: Buffer.from([0xA6, 0xB7, 0x45, 0xBF, 0x24, 0xA2, 0xC2, 0x77, 0x52, 0x77, 0x16, 0xF6, 0xF3, 0x6E, 0xB6, 0x8D]),
-     buildtime: 1640921786,
+-    buildtime: 1640921786,
++	name: "A8.9.30.10200",
++	version: "8.9.30.10200",
++	ver: "8.9.30",
++	sign: Buffer.from([166, 183, 69, 191, 36, 162, 194, 119, 82, 119, 22, 246, 243, 110, 182, 141]),
++	buildtime: 1671103213,
      appid: 16,
 -    subid: 537113159,
 -    bitmap: 184024956,
 -    sigmap: 34869472,
-+    subid: 537138832,
-+    bitmap: 150470524,
-+    sigmap: 16724722,
-+    subsigmap: 0x10400,
++    subid: 537150482,
++	bitmap: 184024956,
++	sigmap: 34869472,
      sdkver: "6.0.0.2494",
      display: "Android",
  };
+ const watch = {
+-    id: "com.tencent.qqlite",
+-    name: "A2.0.5",
+-    version: "2.0.5",
+-    ver: "2.0.5",
+-    sign: Buffer.from([166, 183, 69, 191, 36, 162, 194, 119, 82, 119, 22, 246, 243, 110, 182, 141]),
+-    buildtime: 1559564731,
+-    appid: 16,
+-    subid: 537064446,
+-    bitmap: 16252796,
+-    sigmap: 34869472,
+-    sdkver: "6.0.0.236",
+-    display: "Watch",
++	id: "com.tencent.qqlite",
++	name: "A2.0.5",
++	version: "2.0.5",
++	ver: "2.0.5",
++	sign: Buffer.from([166, 183, 69, 191, 36, 162, 194, 119, 82, 119, 22, 246, 243, 110, 182, 141]),
++	buildtime: 1559564731,
++	appid: 16,
++	subid: 537064446,
++	bitmap: 16252796,
++	sigmap: 34869472,
++	sdkver: "6.0.0.236",
++	display: "Watch",
+ };
+ const hd = {
+     id: "com.tencent.minihd.qq",
+-    name: "A5.9.3.3468",
+-    version: "5.9.3.3468",
+-    ver: "5.9.3",
+-    sign: Buffer.from([170, 57, 120, 244, 31, 217, 111, 249, 145, 74, 102, 158, 24, 100, 116, 199]),
+-    buildtime: 1637427966,
+-    appid: 16,
+-    subid: 537067382,
+-    bitmap: 150470524,
+-    sigmap: 1970400,
+-    sdkver: "6.0.0.2487",
+-    display: "aPad",
++	name: "A5.9.3.3468",
++	version: "5.9.3.3468",
++	ver: "5.9.3",
++	sign: Buffer.from([170, 57, 120, 244, 31, 217, 111, 249, 145, 74, 102, 158, 24, 100, 116, 199]),
++	buildtime: 1637427966,
++	appid: 16,
++	subid: 537150493,
++	bitmap: 150470524,
++	sigmap: 1970400,
++	sdkver: "6.0.0.2487",
++	display: "aPad",
+ };
+ const apklist = {
+     [Platform.Android]: mobile,
+@@ -152,9 +156,9 @@ const apklist = {
+     [Platform.iMac]: { ...hd },
+     [Platform.iPad]: { ...hd },
+ };
+-apklist[Platform.iMac].subid = 537064315;
++apklist[Platform.iMac].subid = 537128930;
+ apklist[Platform.iMac].display = "iMac";
+-apklist[Platform.iPad].subid = 537118796;
++apklist[Platform.iPad].subid = 537149258;
+ apklist[Platform.iPad].display = "iPad";
+ function getApkInfo(p) {
+     return apklist[p] || apklist[Platform.Android];

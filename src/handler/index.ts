@@ -6,7 +6,7 @@ import { emptyHandler } from './empty'
 const messageHandlers = [
   emptyHandler,
   commandHandler,
-  new ChatGPTHandler(),
+  //new ChatGPTHandler(),
   new ChatGPTOfficialHandler()
 ]
 

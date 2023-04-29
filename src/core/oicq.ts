@@ -1,9 +1,8 @@
-import { Client, createClient } from 'oicq'
+import { type Client, createClient } from 'icqq'
 import { config } from 'src/config'
 import { Sender } from 'src/model/sender'
 import { BaseMessageHandler, MessageEvent, MessageHandler } from 'src/types'
 import logger from 'src/util/log'
-import { GuildApp } from 'oicq-guild'
 import inquirer from 'inquirer'
 
 let client: Client
@@ -32,10 +31,10 @@ async function handleMessage (e: MessageEvent) {
 export async function initOicq (initMessageHandler?: Array<MessageHandler | BaseMessageHandler>) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
   await client?.logout()
-  client = createClient(config.botQQ, {
+  client = createClient({
     log_level: 'warn',
-    data_dir: process.cwd() + '/data',
-    platform: config.oicq?.platform ?? 1
+    data_dir: process.cwd() + '/data'
+    // platform: config.oicq?.platform ?? 1
   })
   client.on('message', async e => {
     // 私信或at回复
@@ -46,14 +45,6 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
 
   client.on('system.online', () => {
     client.sendPrivateMsg(config.adminQQ, '已上线~')
-  })
-
-  const app = GuildApp.bind(client)
-  app.on('message', e => {
-    const isAt = e.message.some(item => item.id === app.tiny_id)
-    if (isAt) {
-      handleMessage(e)
-    }
   })
 
   doLogin(client)
@@ -78,5 +69,5 @@ function doLogin (client: Client) {
       .then(() => { this.login() })
   })
 
-  client.login(config.botPassword)
+  client.login(+config.botQQ, config.botPassword)
 }

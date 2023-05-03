@@ -8,6 +8,7 @@ import inquirer from 'inquirer'
 
 let client: Client
 let messageHandler: Array<MessageHandler | BaseMessageHandler>
+let paused = false
 
 async function handleMessage (e: MessageEvent) {
   const sender = new Sender(e)
@@ -15,6 +16,9 @@ async function handleMessage (e: MessageEvent) {
     for (let i = 0; i < messageHandler.length; i++) {
       let isStop = false
       if (messageHandler[i] instanceof BaseMessageHandler) {
+        if (paused) {
+          return
+        }
         isStop = !await (messageHandler[i] as BaseMessageHandler).handle(sender)
       } else if (typeof messageHandler[i] === 'function') {
         isStop = !await (messageHandler[i] as MessageHandler)(sender)
@@ -31,6 +35,7 @@ async function handleMessage (e: MessageEvent) {
 
 export async function initOicq (initMessageHandler?: Array<MessageHandler | BaseMessageHandler>) {
   messageHandler = initMessageHandler ?? messageHandler ?? []
+  paused = false
   await client?.logout()
   client = createClient(config.botQQ, {
     log_level: 'warn',
@@ -65,6 +70,12 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
 export async function doLogout () {
   await client.sendPrivateMsg(config.adminQQ, '已下线~')
   await client?.logout()
+}
+
+// 暂停会话
+export async function pauseSendMessage () {
+  paused = true
+  client.sendPrivateMsg(config.adminQQ, '已暂停~')
 }
 
 function doLogin (client: Client) {

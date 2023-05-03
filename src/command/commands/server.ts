@@ -1,4 +1,4 @@
-import { initOicq } from 'src/core/oicq'
+import { doLogout, initOicq } from 'src/core/oicq'
 import { BaseMessageHandler } from 'src/types'
 import { Sender } from '../../model/sender'
 import { BaseCommand } from '../command'
@@ -7,6 +7,7 @@ import messageHandlers from './../../handler'
 class ServerCommand extends BaseCommand {
   label = 'server'
   usage = [
+    'stop // 停止机器人',
     'reboot // 重启机器人',
     'status // 服务器状态'
   ]
@@ -26,6 +27,9 @@ class ServerCommand extends BaseCommand {
           })
         )
         await initOicq()
+        break
+      case 'stop':
+        await doLogout()
         break
       case 'status':
         sender.reply(JSON.stringify(process.memoryUsage()), true)

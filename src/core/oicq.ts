@@ -61,6 +61,12 @@ export async function initOicq (initMessageHandler?: Array<MessageHandler | Base
   return client
 }
 
+// 退出登录
+export async function doLogout () {
+  await client.sendPrivateMsg(config.adminQQ, '已下线~')
+  await client?.logout()
+}
+
 function doLogin (client: Client) {
   client.on('system.login.slider', function (e) {
     inquirer.prompt({ type: 'input', message: '输入ticket：...\n', name: 'ticket' })

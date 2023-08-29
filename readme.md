@@ -1,3 +1,7 @@
+# 重要：这个项目因为登陆依赖的oicq确实不太给力就废弃了。我们选择了将自己变成[koishi](https://koishi.chat/zh-CN/)插件。
+新版插件使用方法：下载koishi插件客户端，插件市场搜索**openai-character**，安装后配置即可。
+
+
 ![YQ`@SO_A@57DC@T$PU95MSO](https://user-images.githubusercontent.com/59076088/208228558-797a6bca-c794-4173-8d0d-176f8e9d90d6.png)
 
 
